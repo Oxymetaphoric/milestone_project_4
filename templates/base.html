@@ -24,7 +24,6 @@
     {% block extra_css %}
     {% endblock %}
 
-
     {% block extra_js %}
     {% endblock %}
 
@@ -32,16 +31,18 @@
   </head>
   <body>
     <header class="container-fluid fixed-top">
-      
     </header>
+    {% include 'includes/sidenav.html' %}
     {% if messages %}
       <div class="message-container">
         
       </div>
     {% endif %}
+
     {% block page_header %}
     {% endblock %}
 
+    
     {% block content %}
     {% endblock %}
 
