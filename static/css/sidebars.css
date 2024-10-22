@@ -1,5 +1,5 @@
 body {
-  min-height: 100vh;
+  min-height: 100%;
   min-height: -webkit-fill-available;
 }
 
@@ -8,9 +8,9 @@ html {
 }
 
 main {
-  height: 100vh;
+  height: 100%;
   height: -webkit-fill-available;
-  max-height: 100vh;
+  max-height: 100%;
   overflow-x: auto;
   overflow-y: hidden;
 }

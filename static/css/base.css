@@ -1,0 +1,12 @@
+html {
+  height: 100vh;
+}
+
+body {
+  font-family: 'Lato';
+  color: #fefefe;
+}
+
+#header-branding {
+  background-color: red;
+}
