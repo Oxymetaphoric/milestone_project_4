@@ -166,5 +166,6 @@
 
 ---
 
+https://img.logoipsum.com/332.svg
 My wonderful family!
 
