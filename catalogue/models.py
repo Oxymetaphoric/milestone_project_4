@@ -34,16 +34,16 @@ class StockItem(models.Model):
     Title = models.CharField(max_length=512, null=False, blank=False)
     Author = models.CharField(max_length=512, null=False, blank=False)
     ISBN = models.CharField(max_length=256, null=True, blank=True) 
-    PublicationYear = models.IntegerField()
+    PublicationYear = models.CharField(max_length=256, null=True, blank=True)
     Publisher = models.CharField(max_length=256, null=False, blank=False)
     Subjects = models.TextField()
     ItemType = models.CharField(max_length=128, null=False, blank=False)
     ItemCollection = models.CharField(max_length=128, null=False, blank=False)
     FloatingItem = models.CharField(max_length=256, null=True, blank=True)
     ItemLocation = models.CharField(max_length=128, null=False, blank=False)
-    ReportDate = models.DateField()
+    ReportDate = models.CharField(max_length=256, null=False, blank=False)
     ItemCount = models.CharField(max_length=10, null=True, blank=True)
 
     def __str__(self):
-        return self.title
+        return self.Title
 
