@@ -5,6 +5,12 @@ html {
 body {
   font-family: 'Arial';
   color: #fefefe;
+  margin-right: 20px;
+}
+
+hr {
+  padding: 10px;
+  margin: 0px;
 }
 
 #header-branding {

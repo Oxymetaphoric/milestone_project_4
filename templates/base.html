@@ -42,9 +42,9 @@
   </head>
   <body>
     <!-- Header container with two rows -->
-    <div class="row header-container" style="height: 100px;">
-        <div class="branding-header">
-        <img src="{{MEDIA_URL}}logo.svg" alt="corporate logo">
+    <div class="row header-container" style="height: 150px;">
+        <div class="col-12 align-right branding-header">
+          <img style="padding: 10px;" class="" src="{{MEDIA_URL}}logo.svg" alt="corporate logo">
         </div>
         <div class="row location-header">
           <!-- Second header row content -->
@@ -71,7 +71,7 @@
     <!-- Main content area with navigation and content -->
     <div class="row main-content">
         <!-- Navigation sidebar -->
-       <div class="col-3 nav-sidebar" style="height: 100vh;">
+       <div class="col-3 nav-sidebar" style="height: 100vh; width: fit-content; padding:0px;">
           {% include 'includes/sidenav.html' %}
       </div>
 
