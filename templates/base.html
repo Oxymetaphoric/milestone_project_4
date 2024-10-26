@@ -31,6 +31,13 @@
     {% block extra_js %}
     {% endblock %}
 
+
+    {% block page_header %}
+    {% endblock %}
+
+    {% if messages %}
+    {% endif %}
+    
     <title>Library Management System {% block extra_title %}{% endblock %} </title>
   </head>
   <body>
@@ -47,7 +54,7 @@
     <!-- Main content area with navigation and content -->
     <div class="row main-content">
         <!-- Navigation sidebar -->
-        <div class="col nav-sidebar" style="height: 100vh; width:200px;">
+     <div class="col-3 nav-sidebar" style="height: 100vh;">
         {% include 'includes/sidenav.html' %}
         </div>
 
@@ -67,19 +74,11 @@
                 </div>
               </div>
             </form>
+        {% block content %}
+        {% endblock %}
           </div>
-        
       </div>
     </div>
-    {% if messages %}
-    {% endif %}
-
-    {% block page_header %}
-    {% endblock %}
-
-    
-    {% block content %}
-    {% endblock %}
 
     {% block postloadjs %}
     {% endblock %}
