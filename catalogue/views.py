@@ -1,13 +1,13 @@
 from django.shortcuts import render
-from .models import StockItem 
+from .models import CatalogueItem 
 
 # Create your views here.
 
-def display_stock_items(request):
+def display_catalogue_items(request):
     """
     A view to display, search, and sort catalogue items
     """
-    catalogue = StockItem.objects.all()
+    catalogue = CatalogueItem.objects.all()
 
     context = {
             'catalogue': catalogue,

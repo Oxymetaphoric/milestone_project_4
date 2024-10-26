@@ -10,7 +10,7 @@
       <div class="col" style="color:black">
         <ul>
         <hr/>
-          {% for stock_item in catalogue %}
+          {% for catalogue_item in catalogue %}
             <div class="row" style="padding-right: 20px; padding-bottom:0px;">
               <p style="margin-bottom: 5px;"><a href="#">{{ stock_item.Title }}</a></p>
               {% if stock_item.Author != "nan" %} 
