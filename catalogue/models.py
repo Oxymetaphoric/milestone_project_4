@@ -30,7 +30,7 @@ class CatalogueItem(models.Model):
 
 """
 class StockItem(models.Model):
-    StockID = models.CharField(max_length=256, null=True, blank=True)
+    StockID = models.CharField(primary_key=True,  max_length=256)
     catalogue_item = models.ForeignKey(CatalogueItem, on_delete=models.CASCADE)
     
     def __str__(self):
