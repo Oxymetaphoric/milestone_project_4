@@ -11,7 +11,7 @@ class Category(models.Model):
 """
 
 class CatalogueItem(models.Model):
-    BibNum = models.CharField(max_length=256, null=False, blank=False)
+    BibNum = models.CharField(primary_key=True, max_length=256, null=False, blank=False)
     Title = models.CharField(max_length=512, null=False, blank=False)
     Author = models.CharField(max_length=512, null=False, blank=False)
     ISBN = models.CharField(max_length=256, null=True, blank=True) 
