@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'home',
     'catalogue',
+    'users',
 ]
 
 MIDDLEWARE = [
