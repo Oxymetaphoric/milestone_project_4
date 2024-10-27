@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+import uuid
 
 # Create your models here.
 
@@ -23,16 +26,25 @@ class CatalogueItem(models.Model):
     FloatingItem = models.CharField(max_length=256, null=True, blank=True)
     ItemLocation = models.CharField(max_length=128, null=False, blank=False)
     ReportDate = models.CharField(max_length=256, null=False, blank=False)
-    ItemCount = models.CharField(max_length=10, null=True, blank=True)
+    ItemCount = models.IntegerField(default=0, null=True, blank=True)
+    
+    def update_item_count(self):
+        self.ItemCount = self.stock_items.count()
+        self.save()
 
     def __str__(self):
         return self.Title
 
-"""
+
 class StockItem(models.Model):
-    StockID = models.CharField(primary_key=True,  max_length=256)
-    catalogue_item = models.ForeignKey(CatalogueItem, on_delete=models.CASCADE)
+    StockID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    catalogue_item = models.ForeignKey(CatalogueItem, on_delete=models.CASCADE, related_name='stock_items')
     
     def __str__(self):
-        return self.Title
-"""
+        return str(self.StockID)
+
+@receiver(post_save, sender=StockItem)
+@receiver(post_delete, sender=StockItem)
+def update_catalogue_item_count(sender, instance, **kwargs):
+    instance.catalogue_item.update_item_count()
+

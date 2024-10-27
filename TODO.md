@@ -14,5 +14,8 @@
 - renewal 
 - reservations 
 
+- query dictionary to display human-readable ItemType and other attributes currently disaplying short codes 
+
+- create Stock Item model
 
 
