@@ -33,7 +33,7 @@ class CatalogueItem(models.Model):
         self.save()
 
     def __str__(self):
-        return self.Title
+        return str(self.Title)
 
 
 class StockItem(models.Model):
