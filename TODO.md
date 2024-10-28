@@ -4,8 +4,10 @@
 
 - borrower history
 - current checkouts
-- personal details 
-- 
+- ~personal details~ 
+- ~Add users~
+- remove users
+- ~modify user info~
 
 - StockItem model 
 
@@ -16,6 +18,6 @@
 
 - query dictionary to display human-readable ItemType and other attributes currently disaplying short codes 
 
-- create Stock Item model
+- ~create Stock Item model~
 
 

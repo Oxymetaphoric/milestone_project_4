@@ -3,12 +3,30 @@ from django.shortcuts import render, get_object_or_404, reverse, redirect
 from .models import LibraryCustomer 
 from .forms import CustomerForm
 
+def find_users(request):
+    query= request.GET.get('search', '')
+    users = LibraryCustomer.objects.filter(user_id__icontains=query) if query else LibraryCustomer.objects.all()
+
+    context = {
+            'users': users,
+            'search-query': query,
+            }
+    return render(request, 'users/users_home.html', context)
+
 def display_customer_details(request, user_id):
     """
-    A view to display, add, and edit customer details.
+    A view to display and edit customer details.
     """
     library_customer = get_object_or_404(LibraryCustomer, user_id=user_id)
-    form = CustomerForm(request.POST, request.FILES, instance=library_customer)
+
+    if request.method == 'POST':
+        form = CustomerForm(request.POST, instance=library_customer)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = CustomerForm(instance=library_customer)
+
     context = {
         'customer': library_customer,
         'form': form,
