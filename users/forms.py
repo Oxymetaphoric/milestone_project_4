@@ -1,7 +1,7 @@
 from django import forms
 from .models import LibraryCustomer 
 
-class JoiningForm(forms.ModelForm):
+class CustomerForm(forms.ModelForm):
     class Meta:
         model = LibraryCustomer
         fields = ('first_name', 'last_name', 'email',
