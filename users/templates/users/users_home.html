@@ -5,19 +5,32 @@
 {% endblock %}
 
 {% block content %}
-  <div>
-    <form method="GET" action="">
-      <div class="input-group">
-        <input class="form-control border border-black rounded-0" type="text" name="q" placeholder="Search the catalogue">
-        <div class="input-group-append">
-          <button class="form e-control btn btn-black border border-black rounded-0" type="submit">
-            <span class="icon">
-              <i class="fas fa-search"></i>
-            </span>
-          </button>
+    <div class="col container" style="padding-top:20px">
+    <div class="row">
+      <div class="col-12 text-center" style="color:black;">
+        <h2>Customer Accounts</h2>
+        <div class="col-8 offset-2">
+          <hr/>  
         </div>
       </div>
-    </form>
+    </div>
+    <div class="col container">
+      <form method="GET" action="">
+        <div class="input-group">
+          <input class="form-control border border-black rounded-0" type="text" name="q" placeholder="Search users">
+          <div class="input-group-append">
+            <button class="form e-control btn btn-black border border-black rounded-0" type="submit">
+              <span class="icon">
+                <i class="fas fa-search"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+      </form>
+    <div>
+      content
+    </div>    
+    </div>
 </div>
 {% endblock %}
 
