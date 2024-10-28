@@ -7,10 +7,11 @@ def display_customer_details(request, user_id):
     """
     A view to display, add, and edit customer details.
     """
-    customer = get_object_or_404(LibraryCustomer, user_id=user_id)
-
+    library_customer = get_object_or_404(LibraryCustomer, user_id=user_id)
+    form = CustomerForm(request.POST, request.FILES, instance=library_customer)
     context = {
-        'customer': customer,
+        'customer': library_customer,
+        'form': form,
     }
 
     return render(request, 'users/customer_details.html', context)
@@ -24,7 +25,7 @@ def add_library_customer(request):
     else: 
         form = CustomerForm()
     
-    template = 'users/add_user.html'
+    template = 'users/add_new_user.html'
     context = {
         'form': form,
     }
@@ -40,7 +41,7 @@ def edit_library_customer(request, user_id):
     else: 
         form = CustomerForm(instance=library_customer)
 
-    template = 'users/edit_user.html'  # Updated template path
+    template = 'users/customer_details.html'  # Updated template path
     context = {
         'form': form,
         'library_customer': library_customer,
