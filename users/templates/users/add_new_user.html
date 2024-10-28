@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+  <div class="col container" style="padding-top:20px">
+    
+    <div class="row">
+      
+      <div class="col-12 text-center" style="color:black;">
+        <h2>User Account</h2>
+        <div class="col-8 offset-2">
+          <hr/>  
+        </div>
+      </div>
+      
+      <div class="row">
+        
+        <div class="col-6" style="color: black;"> 
+            <div class="row" style="color: black;">
+              <h4>User Details</h4>
+              <hr/>
+            </div>
+            <div>
+              <p>{{ customer.user_id }}</p>
+              <p>{{ customer.first_name }} {{ customer.last_name }}</p>
+              <p>{{ customer.street_address1 }}</p>
+              <p>{{ customer.street_address2 }}</p>
+              <p>{{ customer.postcode }}</p>
+              <p>{{ customer.phone_number }}</p>
+            </div>
+        </div>
+      
+        <div class="col-6">
+          <div class="row" style="color: black;">
+            <h4>Loan History</h4>
+            <hr/>
+          </div>
+          <div></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block postloadjs %}
+{% endblock %}
