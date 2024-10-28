@@ -4,10 +4,10 @@ from .models import LibraryCustomer
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = LibraryCustomer
-        fields = ('first_name', 'last_name', 'email',
+        fields = ('first_name', 'last_name', 'email_address',
                   'phone_number', 'street_address1',
                   'street_address2', 'city_or_town', 
-                  'postcode', 'user_id', 'is_child', 
+                  'postcode', 'is_child', 
                   'date_of_birth')
 
     def __init__(self, *args, **kwargs):
@@ -17,12 +17,11 @@ class CustomerForm(forms.ModelForm):
         """
         super().__init__(*args, **kwargs)
         placeholders = {
-            'user_id': 'User ID',
             'first_name': 'First Name',
             'last_name': 'Last Name',
             'date_of_birth': 'Date of Birth',
             'is_child': 'Is Child',
-            'email': 'Email Address',
+            'email_address': 'Email Address',
             'phone_number': 'Phone Number',
             'street_address1': 'Street Address 1',
             'street_address2': 'Street Address 2',
