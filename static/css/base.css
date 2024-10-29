@@ -13,6 +13,11 @@ hr {
   margin: 0px;
 }
 
-#header-branding {
-  background-color: red;
+.textinput, .dateinput, .form-check-label, #search-input {
+  
+  color: black;
+  padding: 2px;
+  padding-left: 6px; 
+  font-size: 14pt;
+  border-radius: 0;
 }

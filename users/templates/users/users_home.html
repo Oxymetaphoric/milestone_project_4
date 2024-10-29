@@ -17,7 +17,7 @@
     <div class="col container">
         <form id="search-form" method="GET" action="">
             <div class="input-group">
-                <input class="form-control border border-black rounded-0" type="text" name="q" id="search-input" placeholder="Search users">
+                <input class="form-control border border-black rounded-0" type="text" name="q" id="search-input" placeholder="Search name or ID number">
                 <div class="input-group-append">
                     <button class="btn btn-black border border-black rounded-0" type="submit">
                         <span class="icon">
@@ -48,7 +48,7 @@
                 if (data.length > 0) {
                     data.forEach(user => {
                         const userDiv = document.createElement('div');
-                        userDiv.textContent = `${user.first_name} ${user.last_name} - ${user.email_address}`;
+              userDiv.textContent = `${user.first_name} ${user.last_name} - ${user.user_id} - ${user.email_address}`;
                         resultsDiv.appendChild(userDiv);
                     });
                 } else {
