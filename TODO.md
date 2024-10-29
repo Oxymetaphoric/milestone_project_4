@@ -6,7 +6,7 @@
 - current checkouts
 - ~personal details~ 
 - ~Add users~
-- remove users
+- ~remove users~
 - ~modify user info~
 
 - StockItem model 

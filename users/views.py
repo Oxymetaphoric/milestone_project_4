@@ -7,18 +7,20 @@ from .forms import CustomerForm
 def find_users(request):
     return render(request, 'users/users_home.html' )
 
+
 def search_users(request):
     query = request.GET.get('q', '')
     results = []
 
     if query:
-        # Adjust the filter according to your model's field names
         results = list(LibraryCustomer.objects.filter(
-            first_name__icontains=query) | 
-            LibraryCustomer.objects.filter(last_name__icontains=query).values('first_name', 'last_name', 'email_address')
+            first_name__icontains=query
+        ).values('first_name', 'last_name', 'email_address')) + list(
+            LibraryCustomer.objects.filter(
+                last_name__icontains=query
+            ).values('first_name', 'last_name', 'email_address')
         )
-
-    # Always return JsonResponse, even if results is empty
+    print("Search Results:", results)
     return JsonResponse(results, safe=False)
 
 def display_customer_details(request, user_id):
