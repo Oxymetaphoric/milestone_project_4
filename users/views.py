@@ -1,17 +1,25 @@
 
 from django.shortcuts import render, get_object_or_404, reverse, redirect 
+from django.http import JsonResponse
 from .models import LibraryCustomer 
 from .forms import CustomerForm
 
 def find_users(request):
-    query= request.GET.get('search', '')
-    users = LibraryCustomer.objects.filter(user_id__icontains=query) if query else LibraryCustomer.objects.all()
+    return render(request, 'users/users_home.html' )
 
-    context = {
-            'users': users,
-            'search-query': query,
-            }
-    return render(request, 'users/users_home.html', context)
+def search_users(request):
+    query = request.GET.get('q', '')
+    results = []
+
+    if query:
+        # Adjust the filter according to your model's field names
+        results = list(LibraryCustomer.objects.filter(
+            first_name__icontains=query) | 
+            LibraryCustomer.objects.filter(last_name__icontains=query).values('first_name', 'last_name', 'email_address')
+        )
+
+    # Always return JsonResponse, even if results is empty
+    return JsonResponse(results, safe=False)
 
 def display_customer_details(request, user_id):
     """
@@ -24,6 +32,8 @@ def display_customer_details(request, user_id):
         if form.is_valid():
             form.save()
             return redirect('home')
+        else: 
+            print(form.errors)
     else:
         form = CustomerForm(instance=library_customer)
 

@@ -16,15 +16,15 @@
       </div>
       <div class="row">
         <div class="col-6" style="color: black;"> 
-          <form method="POST" enctype="multipart/form-data">
+          <form method="POST" action="{% url 'add_library_customer' %}" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form | crispy }} 
-          </form>
           <div class="row">
-            <a href="{% url 'add_library_customer' %}" class="btn btn-success mt-3">
+            <button type="submit" class="btn btn-success mt-3">
               Add new user
-            </a>
+              </button>
           </div>
+          </form>
         </div>
       </div>
     </div>
