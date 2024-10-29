@@ -1,6 +1,7 @@
 
 from django.shortcuts import render, get_object_or_404, reverse, redirect 
 from django.http import JsonResponse
+from django.db.models import Q
 from .models import LibraryCustomer 
 from .forms import CustomerForm
 
@@ -13,14 +14,16 @@ def search_users(request):
     results = []
 
     if query:
-        results = list(LibraryCustomer.objects.filter(
-            first_name__icontains=query
-        ).values('first_name', 'last_name', 'email_address')) + list(
-            LibraryCustomer.objects.filter(
-                last_name__icontains=query
-            ).values('first_name', 'last_name', 'email_address')
-        )
-    print("Search Results:", results)
+        # Split the query into separate words
+        search_terms = query.split()
+        filters = Q()  # Start with an empty Q object
+
+        for term in search_terms:
+            # Create Q objects for each term to match first or last names
+            filters |= Q(first_name__icontains=term) | Q(last_name__icontains=term) | Q(user_id__icontains=term)
+
+        results = list(LibraryCustomer.objects.filter(filters).values('first_name', 'last_name', 'email_address', 'user_id'))
+
     return JsonResponse(results, safe=False)
 
 def display_customer_details(request, user_id):
