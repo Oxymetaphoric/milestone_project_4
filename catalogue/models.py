@@ -40,6 +40,62 @@ class StockItem(models.Model):
     StockID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     catalogue_item = models.ForeignKey(CatalogueItem, on_delete=models.CASCADE, related_name='stock_items')
     
+    @property
+    def BibNum(self):
+        return self.catalogue_item.BibNum
+
+
+    @property
+    def Title(self):
+        return self.catalogue_item.Title
+
+    @property
+    def Author(self):
+        return self.catalogue_item.Author
+
+    @property
+    def ISBN(self):
+        return self.catalogue_item.ISBN
+
+    @property
+    def PublicationYear(self):
+        return self.catalogue_item.PublicationYear
+
+    @property
+    def Publisher(self):
+        return self.catalogue_item.Publisher
+
+    @property
+    def Subjects(self):
+        return self.catalogue_item.Subjects
+
+    @property
+    def ItemType(self):
+        return self.catalogue_item.ItemCollection
+
+    @property
+    def FloatingItem(self):
+        return self.catalogue_item.FloatingItem
+
+    @property
+    def ItemLocation(self):
+        return self.catalogue_item.ItemLocation
+
+    @property
+    def ReportDate(self):
+        return self.catalogue_item.ReportDate
+
+    @property
+    def ItemCount(self):
+        return self.catalogue_item.ItemCount
+
+    @property
+    def ItemCollection(self):
+        return self.catalogue_item.ItemCollection
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+    
     def __str__(self):
         return str(self.StockID)
 

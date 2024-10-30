@@ -50,15 +50,17 @@ def edit_stock_item(request, StockID):
     """
     A view to display and edit customer details.
     """
-    stock_item = get_object_or_404(StockItem, StockID=StockID)
+    stock_item = get_object_or_404(StockItem, id=StockID)
 
     if request.method == 'POST':
         form = StockForm(request.POST, instance=stock_item)
         if form.is_valid():
-            form.save()
-            return redirect('home')
-        else: 
-            print(form.errors)
+            stock_item = form.save(commit=False)
+            new_item_count = form.cleaned_data['item_count']
+            stock_item.catalogue_item.ItemCount = new_item_count  # Update CatalogueItem's ItemCount
+            stock_item.save()
+            stock_item.catalogue_item.save()
+            return redirect('catalogue_home')
     else:
         form = StockForm(instance=stock_item)
 
