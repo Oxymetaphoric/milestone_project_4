@@ -33,22 +33,9 @@
   <div class="row" style="padding-top:20px">
     <div class="row">
       <div class="col" style="color:black">
-        <div id="search-results"</div>
+        <div id="search-results"></div>
         <ul>
         <hr/>
-          {% for item in catalogue %}
-            <div class="search-results row" style="padding-right: 20px; padding-bottom:0px;">
-            <p style="margin-bottom: 5px;"><a href="{% url 'edit_stock_item' item.StockID %}">{{ item.Title }}</a></p>
-              {% if item.Author != "nan" %} 
-                <p class="text-muted">
-                  {{ item.Author }}
-                </p> 
-              {% endif %}
-              <p class="small italic text-muted">{{ item.Publisher }} {{ item.PublicationYear }}</p>
-              <p class="small italic text-muted"> No. of items: {{ item.ItemCount }}</p>
-            </div>
-            <hr/>
-          {% endfor %}
         </ul>
       </div>
     </div>
@@ -58,6 +45,8 @@
 
 {% block postloadjs %}
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Search functionality
     document.getElementById('search-form').addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent the default form submission
 
@@ -72,17 +61,37 @@
                 if (data.length > 0) {
                     data.forEach(item => {
                         const stockDiv = document.createElement('div');
-              stockDiv.textContent = `
-                  ${item.Title}
-`;
+                        stockDiv.classList.add('search-result'); // Add a class for styling
+                        stockDiv.innerHTML = `
+                            <p style="margin-bottom: 5px;">
+                                <a class="text-black edit-stock-item-link" data-stock-id="${item.stock_items__StockID}" href="#">${item.Title}</a>
+                            </p>
+                            <p class="text-muted">${item.Author}</p>
+                            <p class="small italic text-muted">${item.Publisher}</p>
+                        `;
                         resultsDiv.appendChild(stockDiv);
                     });
                 } else {
                     resultsDiv.textContent = 'No titles found.';
                 }
+
+                // Attach click event listener to newly created links
+                document.querySelectorAll('.edit-stock-item-link').forEach(link => {
+                    link.addEventListener('click', function(event) {
+                        event.preventDefault(); // Prevent default link behavior
+
+                        const stockID = this.getAttribute('data-stock-id'); // Get the StockID from the data attribute
+                        if (stockID) {
+                            window.location.href = `/catalogue/edit/${stockID}/`; // Redirect to the edit page
+                        } else {
+                            console.error('Stock ID not found.');
+                        }
+                    });
+                });
             })
             .catch(error => console.error('Error:', error));
     });
+});
 </script>
 {% endblock %}
 

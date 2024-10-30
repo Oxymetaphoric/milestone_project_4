@@ -35,7 +35,7 @@ class CatalogueForm(forms.ModelForm):
         """
         super().__init__(*args, **kwargs)
         placeholders = {
-                'BibNum': 'Bibliographic Number:',
+            'BibNum': 'Bibliographic Number:',
             'Title': 'Title',
             'Author': 'Author',
             'Publisher': 'Publisher',

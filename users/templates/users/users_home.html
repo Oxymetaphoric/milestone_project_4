@@ -48,7 +48,14 @@
                 if (data.length > 0) {
                     data.forEach(user => {
                         const userDiv = document.createElement('div');
-              userDiv.textContent = `${user.first_name} ${user.last_name} - ${user.user_id} - ${user.email_address}`;
+                        
+                        // Create a link to the user account page
+                        const userLink = document.createElement('a');
+                        userLink.href = `/users/edit/${user.user_id}/`; // Using the user_id to link to the account details
+                        userLink.textContent = `${user.first_name} ${user.last_name} - ${user.user_id} - ${user.email_address}`;
+                        
+                        // Append the link to the userDiv
+                        userDiv.appendChild(userLink);
                         resultsDiv.appendChild(userDiv);
                     });
                 } else {
@@ -57,6 +64,5 @@
             })
             .catch(error => console.error('Error:', error));
     });
-</script>
-{% endblock %}
+</script>{% endblock %}
 
