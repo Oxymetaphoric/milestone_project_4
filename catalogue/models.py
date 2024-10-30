@@ -44,7 +44,6 @@ class StockItem(models.Model):
     def BibNum(self):
         return self.catalogue_item.BibNum
 
-
     @property
     def Title(self):
         return self.catalogue_item.Title

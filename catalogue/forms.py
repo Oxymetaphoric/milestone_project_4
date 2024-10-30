@@ -11,6 +11,22 @@ class CatalogueForm(forms.ModelForm):
                 'FloatingItem', 'ItemLocation', 'ReportDate',
                 'ItemCount',
                     ]
+        labels = {
+                'BibNum': 'Bibliographic Number',
+                'Title': 'Title',
+                'Author': 'Author',
+                'Publisher': 'Publisher',
+                'PublicationYear': 'Year of Publication',
+                'ISBN': 'ISBN',
+                'Subjects': 'Subjects',
+                'ItemType': 'Item Type',
+                'ItemCollection': 'Item Collection',
+                'FloatingItem': 'Floating Item',
+                'ItemLocation': 'Item Location',
+                'ReportDate': 'Report Date',
+                'ItemCount': 'Item Count',
+
+                }
 
     def __init__(self, *args, **kwargs):
         """
@@ -19,7 +35,7 @@ class CatalogueForm(forms.ModelForm):
         """
         super().__init__(*args, **kwargs)
         placeholders = {
-            'BibNum': 'Bibliographic Number',
+                'BibNum': 'Bibliographic Number:',
             'Title': 'Title',
             'Author': 'Author',
             'Publisher': 'Publisher',
@@ -61,6 +77,22 @@ class StockForm(forms.ModelForm):
         fields = [
                 'item_count',
                     ]
+        labels = {
+                'bib_num': 'Bibliographic Number:',
+                'title': 'Title:',
+                'author': 'Author:',
+                'publisher': 'Publisher:',
+                'publication_year': 'Year of Publication:',
+                'ISBN': 'ISBN:',
+                'subjects': 'Subjects:',
+                'item_type': 'Item Type:',
+                'item_collection': 'Item Collection:',
+                'floating_item': 'Floating Item:',
+                'item_location': 'Item Location:',
+                'report_date': 'Report Date:',
+                'item_count': 'Item Count:',
+
+                }
 
     def __init__(self, *args, **kwargs):
         """
@@ -68,16 +100,16 @@ class StockForm(forms.ModelForm):
         labels, and set autofocus on first field
         """
         super().__init__(*args, **kwargs)
-        self.fields['bib_num'].intial = self.instance.BibNum
-        self.fields['title'].intial = self.instance.Title
-        self.fields['author'].intial = self.instance.Author
-        self.fields['publisher'].intial = self.instance.Publisher
+        self.fields['bib_num'].initial = self.instance.BibNum
+        self.fields['title'].initial = self.instance.Title
+        self.fields['author'].initial = self.instance.Author
+        self.fields['publisher'].initial = self.instance.Publisher
         self.fields['publication_year'].intial = self.instance.PublicationYear
-        self.fields['ISBN'].intial = self.instance.ISBN
-        self.fields['subjects'].intial = self.instance.Subjects
-        self.fields['item_type'].intial = self.instance.ItemType
-        self.fields['item_collection'].intial = self.instance.ItemCollection
-        self.fields['flaoting_item'].intial = self.instance.FloatingItem
-        self.fields['item_location'].intial = self.instance.ItemLocation
-        self.fields['report_date'].intial = self.instance.ReportDate
-        self.fields['item_count'].intial = self.instance.ItemCount
+        self.fields['ISBN'].initial = self.instance.ISBN
+        self.fields['subjects'].initial = self.instance.Subjects
+        self.fields['item_type'].initial = self.instance.ItemType
+        self.fields['item_collection'].initial = self.instance.ItemCollection
+        self.fields['floating_item'].initial = self.instance.FloatingItem
+        self.fields['item_location'].initial = self.instance.ItemLocation
+        self.fields['report_date'].initial = self.instance.ReportDate
+        self.fields['item_count'].initial = self.instance.ItemCount

@@ -4,7 +4,7 @@ html {
 
 body {
   font-family: 'Arial';
-  color: #fefefe;
+  color: darkgray;
   margin-right: 20px;
 }
 
@@ -13,9 +13,8 @@ hr {
   margin: 0px;
 }
 
-.textinput, .dateinput, .form-check-label, #search-input {
+label, .textinput, .dateinput, .form-check-label, #search-input {
   
-  color: black;
   padding: 2px;
   padding-left: 6px; 
   font-size: 14pt;

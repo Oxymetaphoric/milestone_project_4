@@ -50,7 +50,7 @@ def edit_stock_item(request, StockID):
     """
     A view to display and edit customer details.
     """
-    stock_item = get_object_or_404(StockItem, id=StockID)
+    stock_item = get_object_or_404(StockItem, StockID=StockID)
 
     if request.method == 'POST':
         form = StockForm(request.POST, instance=stock_item)
