@@ -1,11 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from django.http import JsonResponse
 from .models import CatalogueItem, StockItem 
+from .forms import StockForm
 
 # Create your views here.
 
 def display_catalogue_items(request):
+
     """
     A view to display, search, and sort catalogue items
     """
@@ -43,3 +45,27 @@ def search_catalogue(request):
     print("search results:", results)
     return JsonResponse(results, safe=False)
 
+
+def edit_stock_item(request, StockID):
+    """
+    A view to display and edit customer details.
+    """
+    stock_item = get_object_or_404(StockItem, StockID=StockID)
+
+    if request.method == 'POST':
+        form = StockForm(request.POST, instance=stock_item)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+        else: 
+            print(form.errors)
+    else:
+        form = StockForm(instance=stock_item)
+
+    template = 'catalogue/item_details.html'  # Updated template path
+    context = {
+        'stock_item': stock_item,
+        'form': form,
+    }
+
+    return render(request, template, context)
