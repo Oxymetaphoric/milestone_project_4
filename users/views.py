@@ -45,6 +45,7 @@ def display_customer_details(request, user_id):
     context = {
         'customer': library_customer,
         'form': form,
+        'user_id': user_id,
     }
 
     return render(request, 'users/customer_details.html', context)
@@ -66,6 +67,7 @@ def add_library_customer(request):
 
 def edit_library_customer(request, user_id):
     library_customer = get_object_or_404(LibraryCustomer, pk=user_id)
+    user_id=user_id
     if request.method == 'POST':
         form = CustomerForm(request.POST, request.FILES, instance=library_customer)
         if form.is_valid():
@@ -78,6 +80,7 @@ def edit_library_customer(request, user_id):
     context = {
         'form': form,
         'library_customer': library_customer,
+        'user_id': user_id,
     }
 
     return render(request, template, context)
@@ -85,5 +88,5 @@ def edit_library_customer(request, user_id):
 def delete_library_customer(request, user_id):
     library_customer = get_object_or_404(LibraryCustomer, pk=user_id)
     library_customer.delete()
-    return redirect(reverse('home'))
+    return redirect(reverse('catalogue'))
 

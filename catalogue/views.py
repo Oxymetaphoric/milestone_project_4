@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.db.models import Q
 from django.http import JsonResponse
 from .models import CatalogueItem, StockItem 
@@ -76,4 +76,9 @@ def edit_stock_item(request, StockID):
 
     return render(request, template, context)
 
+
+def remove_stock_item(request, StockID):
+    stock_item = get_object_or_404(StockItem, StockID=StockID)
+    stock_item.delete()
+    return redirect(reverse('catalogue'))
 
