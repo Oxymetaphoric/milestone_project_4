@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.db.models import Q
 from django.http import JsonResponse
+from django.contrib import messages
 from .models import CatalogueItem, StockItem 
 from .forms import StockForm
 
@@ -21,7 +22,7 @@ def display_catalogue_items(request):
 
 def display_stock_items(request):
     stock_item=StockItem.objects.all()
-
+    
     context = {
             'stock_items': stock_item,
             }
@@ -31,54 +32,82 @@ def display_stock_items(request):
 def search_catalogue(request):
     query = request.GET.get('q', '')
     results = []
-
     if query:
         # Split the query into separate words
         search_terms = query.split()
         filters = Q()  # Start with an empty Q object
-
         for term in search_terms:
-            # Create Q objects for each term to match first or last names
-            filters |= Q(Title__icontains=term) | Q(Author__icontains=term) | Q(Publisher__icontains=term)
-            results = list(
-                CatalogueItem.objects.filter(filters)
-                .prefetch_related('stock_items')  # Use prefetch_related if there's a reverse relationship
-                .values('Title', 'Author', 'Publisher', 'stock_items__StockID')
-                )
-    print("search results:", results)
+            # Create Q objects for each term to match fields
+            filters |= (
+                Q(Title__icontains=term) | 
+                Q(Author__icontains=term) | 
+                Q(Publisher__icontains=term)
+            )
+        
+        # Get CatalogueItems and include BibNum as the identifier
+        results = list(
+            CatalogueItem.objects.filter(filters)
+            .prefetch_related('stock_items')
+            .values(
+                'BibNum',  # Use BibNum instead of id
+                'Title', 
+                'Author', 
+                'Publisher',
+                'ItemCount'
+            )
+        )
+        
+        # Print results for debugging
+        print("search results:", results)
+    
     return JsonResponse(results, safe=False)
 
+def book_info(request, BibNum):  # Changed from StockID to BibNum
+    catalogue_item = get_object_or_404(CatalogueItem, pk=BibNum)  # This is fine since BibNum is the pk
+    stock_items = catalogue_item.stock_items.all()
+    
+    if request.method == 'POST':        
+        if 'add_copies' in request.POST:
+            try:
+                quantity = int(request.POST.get('quantity', 1))
+                for _ in range(quantity):
+                    StockItem.objects.create(
+                        catalogue_item=catalogue_item,
+                        status='Available'  # Assuming you have a status field
+                    )
+                catalogue_item.ItemCount = StockItem.objects.filter(catalogue_item=catalogue_item).count()
+                catalogue_item.save()
+                messages.success(request, f'Added {quantity} new copies successfully.')
+            except ValueError:
+                messages.error(request, 'Invalid quantity specified.')
+            
+        elif 'delete_stock_item' in request.POST:
+            stock_id = request.POST.get('stock_id')
+            try:
+                stock_item = StockItem.objects.get(pk=stock_id)
+                stock_item.delete()
+                catalogue_item.ItemCount = StockItem.objects.filter(catalogue_item=catalogue_item).count()
+                catalogue_item.save()
+                messages.success(request, 'Stock item deleted successfully.')
+            except StockItem.DoesNotExist:
+                messages.error(request, 'Stock item not found.')
+                
+        elif 'update_stock_item' in request.POST:
+            stock_id = request.POST.get('stock_id')
+            new_status = request.POST.get('status')
+            try:
+                stock_item = StockItem.objects.get(pk=stock_id)
+                stock_item.status = new_status
+                stock_item.save()
+                messages.success(request, 'Stock item updated successfully.')
+            except StockItem.DoesNotExist:
+                messages.error(request, 'Stock item not found.')
+                
+        return redirect('book_info', BibNum=BibNum)
 
-def edit_stock_item(request, StockID):
-    """
-    A view to display and edit customer details.
-    """
-    stock_item = get_object_or_404(StockItem, StockID=StockID)
-    catalogue = CatalogueItem.objects.prefetch_related('stock_items').all()
-    if request.method == 'POST':
-        form = StockForm(request.POST, instance=stock_item)
-        if form.is_valid():
-            stock_item = form.save(commit=False)
-            new_item_count = form.cleaned_data['item_count']
-            stock_item.catalogue_item.ItemCount = new_item_count  # Update CatalogueItem's ItemCount
-            stock_item.save()
-            stock_item.catalogue_item.save()
-            return redirect('catalogue')
-    else:
-        form = StockForm(instance=stock_item)
-
-    template = 'catalogue/item_details.html'  # Updated template path
     context = {
-        'stock_item': stock_item,
-        'form': form,
-        'catalogue': catalogue,
+        'catalogue_item': catalogue_item,
+        'stock_items': stock_items,
+        'BibNum': BibNum,
     }
-
-    return render(request, template, context)
-
-
-def remove_stock_item(request, StockID):
-    stock_item = get_object_or_404(StockItem, StockID=StockID)
-    stock_item.delete()
-    return redirect(reverse('catalogue'))
-
+    return render(request, 'catalogue/item_details.html', context)
