@@ -19,20 +19,23 @@
     </div>
       
     <div class="row">
-      <form method="POST" enctype="multipart/form-data">
+      <form method="POST" action="{% url 'edit_stock_item' StockID %}" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form | crispy }}
-        <div class="row">
-          <div class="col">
-            <a href="{% url 'remove_stock_item' StockID %}" class="btn btn-danger mt-3">
-              Remove Item
-            </a>
-          </div> 
           <div class="col">
             <button type="submit" class="btn btn-success mt-3">Save Changes</button>
           </div>
-        </div> 
       </form>
+    </div> 
+      
+      
+        <div class="row">
+          <div class="col">
+            <form method="POST" action="{% url 'remove_stock_item' StockID %}"
+            <button type="submit" class="btn btn-danger mt-3">
+              Remove Item
+            </button>
+          </div> 
   </div>
 {% endblock %}
 

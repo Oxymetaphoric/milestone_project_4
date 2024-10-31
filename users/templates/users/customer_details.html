@@ -7,9 +7,7 @@
 
 {% block content %}
   <div class="col container" style="padding-top:20px">
-    
     <div class="row">
-      
       <div class="col-12 text-center" style="color:black;">
         <h2>User Account</h2>
         <div class="col-8 offset-2">
@@ -22,31 +20,29 @@
           <div class="row" style="color: black;">
             <h4 class="text-center">User Details</h4>
             <hr/>
-          <div class="col">
+            <div class="row">
               <form method="POST" action="{% url 'edit_library_customer' user_id %}" enctype="multipart/form-data">
               {% csrf_token %}
               {{ form | crispy }}
-              <div class="row">
                 <div class="col">
-                  <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+                    <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
                 </div>
-              </div>
-                <div class="col">
-                    <form method="POST" action="{% url 'delete_library_customer' user_id %}">
-                      {% csrf_token %}
-                        <button type="submit" class="btn btn-danger mt-3">Delete Customer</button>
-                    </form>
-                  </div>
-            </form>
-          </div> 
+              </form>
+            </div>
+            <div class="col">
+              <form method="POST" action="{% url 'delete_library_customer' user_id %}">
+              {% csrf_token %}
+                <button type="submit" class="btn btn-danger mt-3">Delete Customer</button>
+              </form>
+            </div> 
+          </div>
         </div>
-      </div>
-      <div class="col" style="color: black;">
-        <h4>Loan History</h4>
-        <hr/>
-      </div>
-      <div class="" id="loan-history"></div>
-      </div>
+        <div class="col" style="color: black;">
+          <h4>Loan History</h4>
+          <hr/>
+        </div>
+        <div class="" id="loan-history"></div>
+        </div>
       </div>
     </div>
 {% endblock %}
