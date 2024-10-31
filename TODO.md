@@ -19,5 +19,7 @@
 - query dictionary to display human-readable ItemType and other attributes currently disaplying short codes 
 
 - ~create Stock Item model~
+- handle null return CatalogueItems in search links
+- investigate where Edit Item page is drawing it's form labels from:w
 
 
