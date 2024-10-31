@@ -6,14 +6,18 @@
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="col">
     <div class="row">
         <div class="col-12">
-            <h2>{{ catalogue_item.Title }}</h2>
+            <p><strong>{{ catalogue_item.Title }}</strong></p>
             <p>Author: {{ catalogue_item.Author }}</p>
             <p>Publisher: {{ catalogue_item.Publisher }}</p>
             <p>Total Copies: {{ catalogue_item.ItemCount }}</p>
             
+      <form>
+            {% csrf_token %}
+            {{ form | crispy }}
+      </form>      
             <!-- Add new copies form -->
             <form method="POST" class="mb-4">
                 {% csrf_token %}
@@ -41,7 +45,7 @@
                             <td>
                                 <form method="POST" class="d-inline">
                                     {% csrf_token %}
-                                    <input type="hidden" name="stock_id" value="{{ item.id }}">
+                                    <input type="hidden" name="stock_id" value="{{ item.StockID }}">
                                     <select name="status" onchange="this.form.submit()" class="form-select">
                                         <option value="Available" {% if item.status == 'Available' %}selected{% endif %}>Available</option>
                                         <option value="Borrowed" {% if item.status == 'Borrowed' %}selected{% endif %}>Borrowed</option>

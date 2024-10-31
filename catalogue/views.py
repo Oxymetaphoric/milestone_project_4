@@ -73,7 +73,6 @@ def book_info(request, BibNum):  # Changed from StockID to BibNum
                 for _ in range(quantity):
                     StockItem.objects.create(
                         catalogue_item=catalogue_item,
-                        status='Available'  # Assuming you have a status field
                     )
                 catalogue_item.ItemCount = StockItem.objects.filter(catalogue_item=catalogue_item).count()
                 catalogue_item.save()
