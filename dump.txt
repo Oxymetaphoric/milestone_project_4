@@ -1,0 +1,17 @@
+{% for item in catalogue %}
+    <div class="search-results row" style="padding-right: 20px; padding-bottom:0px;">
+        <p style="margin-bottom: 5px;">
+            {% if item.stock_items.all %}
+                <a class="text-black" data-stock-id="{{ stock_item.StockID }}" class="edit-stock-item-link">{{ item.Title }}</a>
+            {% else %}
+              <p>{{ item.Title }}<br><p class="text-muted">No Items in stock</p>
+            {% endif %}
+        </p>
+        {% if item.Author != "nan" %} 
+            <p class="text-muted">{{ item.Author }}</p> 
+        {% endif %}
+        <p class="small italic text-muted">{{ item.Publisher }} {{ item.PublicationYear }}</p>
+        <p class="small italic text-muted"> No. of items: {{ item.ItemCount }}</p>
+    </div>
+    <hr/>
+

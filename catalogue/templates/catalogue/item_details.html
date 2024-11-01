@@ -13,13 +13,10 @@
             <p>Author: {{ catalogue_item.Author }}</p>
             <p>Publisher: {{ catalogue_item.Publisher }}</p>
             <p>Total Copies: {{ catalogue_item.ItemCount }}</p>
-            
-      <form>
-            {% csrf_token %}
-            {{ form | crispy }}
-      </form>      
+          
             <!-- Add new copies form -->
             <form method="POST" class="mb-4">
+            {{ form | crispy }} 
                 {% csrf_token %}
                 <div class="input-group mb-3">
                     <input type="number" name="quantity" class="form-control" value="1" min="1">
@@ -45,7 +42,7 @@
                             <td>
                                 <form method="POST" class="d-inline">
                                     {% csrf_token %}
-                                    <input type="hidden" name="stock_id" value="{{ item.StockID }}">
+                                    <input style="font-size:12pt; john wayne" type="hidden" name="stock_id" value="{{ item.StockID }}">
                                     <select name="status" onchange="this.form.submit()" class="form-select">
                                         <option value="Available" {% if item.status == 'Available' %}selected{% endif %}>Available</option>
                                         <option value="Borrowed" {% if item.status == 'Borrowed' %}selected{% endif %}>Borrowed</option>
