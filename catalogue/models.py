@@ -16,16 +16,16 @@ class Category(models.Model):
 class CatalogueItem(models.Model):
     BibNum = models.CharField(primary_key=True, max_length=256, null=False, blank=False)
     Title = models.CharField(max_length=1024, null=False, blank=False)
-    Author = models.CharField(max_length=512, null=False, blank=False)
-    ISBN = models.CharField(max_length=512, null=True, blank=True) 
-    PublicationYear = models.CharField(max_length=512, null=True, blank=True)
-    Publisher = models.CharField(max_length=512, null=False, blank=False)
-    Subjects = models.CharField(max_length=512, null=False, blank=False)
+    Author = models.CharField(max_length=1024, null=False, blank=False)
+    ISBN = models.CharField(max_length=1024, null=True, blank=True) 
+    PublicationYear = models.CharField(max_length=1024, null=True, blank=True)
+    Publisher = models.CharField(max_length=1024, null=False, blank=False)
+    Subjects = models.CharField(max_length=1024, null=False, blank=False)
     ItemType = models.CharField(max_length=256, null=False, blank=False)
     ItemCollection = models.CharField(max_length=256, null=False, blank=False)
-    FloatingItem = models.CharField(max_length=512, null=True, blank=True)
+    FloatingItem = models.CharField(max_length=1024, null=True, blank=True)
     ItemLocation = models.CharField(max_length=256, null=False, blank=False)
-    ReportDate = models.CharField(max_length=512, null=False, blank=False)
+    ReportDate = models.CharField(max_length=1024, null=False, blank=False)
     ItemCount = models.IntegerField(default=0, null=True, blank=True)
     
     def update_item_count(self):
