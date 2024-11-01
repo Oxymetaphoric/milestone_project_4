@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-6" style="color: black;"> 
+        <div class="col-8 offset-2" style="color: black;"> 
           <form method="POST" action="{% url 'add_library_customer' %}" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form | crispy }} 
