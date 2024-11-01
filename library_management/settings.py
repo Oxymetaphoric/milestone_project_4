@@ -25,10 +25,10 @@ ENVIRONMENT = os.getenv('DJANGO_ENV', 'development')
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-0o2q(w^2)hkr$a2*8)ji!@l%^bwxo-aib4bq0$#s*b&a^m=tp&'
+SECRET_KEY = os.getenv('SECRET_KEY', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = 'development' in os.environ
 
 ALLOWED_HOSTS = ['library-management-lms-c0ccc240f065.herokuapp.com', 'loclahost']
 
