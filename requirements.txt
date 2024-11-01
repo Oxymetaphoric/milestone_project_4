@@ -4,10 +4,12 @@ dj-database-url==2.3.0
 Django==5.1.2
 django-allauth==65.1.0
 django-crispy-forms==2.3
+django-heroku==0.3.1
 gunicorn==23.0.0
 numpy==2.1.2
 packaging==24.1
 pandas==2.2.3
+psycopg2==2.9.10
 psycopg2-binary==2.9.10
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
