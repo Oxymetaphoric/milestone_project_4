@@ -1,0 +1,22 @@
+html {
+  height: 100vh;
+}
+
+body {
+  font-family: 'Arial';
+  color: black;
+  margin-right: 20px;
+}
+
+hr {
+  padding: 10px;
+  margin: 0px;
+}
+
+label, .textinput, .dateinput, .form-check-label, #search-input {
+  
+  padding: 2px;
+  padding-left: 6px; 
+  font-size: 14pt;
+  border-radius: 0;
+}
