@@ -1,11 +1,8 @@
-# Milestone Project 4
+# Milestone Project :four:
  
-This is my milestone four project for the Code Institute's 'Level 5 Diploma in Web Application Development.' The aim of this project is to design, develop, and implement a backend for a comprehensive library management web application using the python framework Django. This webapp will allow users to create, edit, and manage catalog records, check in and return items, and manage user accounts, providing an efficient, accessible tool for library inventory and user management. The application is aimed at libraries seeking a modern, flexible system to streamline their cataloging, inventory management, and user records, while also offering a user-friendly experience for library members and staff alike.
-
-# Milestone Project :two:
+This is my milestone four project for the Code Institute's 'Level 5 Diploma in Web Application Development.' The aim of this project is to design, develop, and implement a full-stack web application inluding back and front end design, and integrating an ePayment system via online service Stripe. This project will be a comprehensive library management web application using the python framework Django. This webapp will allow librarians and library staff to create, edit, and manage catalog records, check in and return items, and manage user accounts and stock control, providing an efficient, accessible tool for library inventory and user management. The application is aimed at libraries seeking a modern, flexible system to streamline their cataloging, inventory management, and user records, while also offering a user-friendly experience for library staff. This project will focus on the library staff and librarians use of the app, however possible future development could extend this project further to encompass a library customer system whereby users could login remotely, access their account information and interact with the library system.  
 
 [LIVE SITE](https://library-management-lms-c0ccc240f065.herokuapp.com/)
-
 
 ---
 
@@ -18,8 +15,7 @@ This is my milestone four project for the Code Institute's 'Level 5 Diploma in W
 #### User Goals:
 
 - Access and search a library catalogue efficiently.
-- Reserve, check out, and return items with ease. Access account information, including due dates and item 
-availability. 
+- Reserve, check out, and return items with ease. Access account information, including due dates and item availability. 
 - View account history and any current items checked out.
 
 #### Site Operator Goals:
@@ -47,7 +43,7 @@ availability.
 
 #### Front End
 
-The user interface will leverage bootstrap5 to offer a streamlined, visually appealing experience. To maintain consistency across pages, the project uses Django’s template inheritance, creating a base template with core elements (such as navigation). This approach enables each page to extend the base, ensuring a uniform layout and reducing code duplication, making for a cleaner, more maintainable front-end design.
+The user interface will leverage bootstrap5 to offer a stream-lined, visually appealing experience. To maintain consistency across pages, the project uses Django’s template inheritance, creating a base template with core elements (such as navigation). This approach enables each page to extend the base, ensuring a uniform layout and reducing code duplication, making for a cleaner, more maintainable front-end design.
 
 #### Back End
 
@@ -109,7 +105,8 @@ In building the library app, several accessibility features to keep in mind:
 - Appropriate color contrast for readability.
 - Legible, accessible fonts for ease of reading.
 - Alternative text for any non-decorative images.
-- Clearly labeled, accessible forms to improve user interaction.---
+- Clearly labeled, accessible forms to improve user interaction.
+---
 
 ## :bricks: Structure
 
@@ -176,6 +173,7 @@ Key features supported by this structure include:
 - Inventory Management: StockItem records help track physical availability of each catalog item.
 - Borrowing and Returning: Each BorrowRecord entry logs check-outs and returns, helping manage due dates and availability.
 - Admin Controls: Admin users can update catalog entries, manage stock items, and view borrowing history across users.
+
 ---
 
 ## :skull_and_crossbones: Skeleton
