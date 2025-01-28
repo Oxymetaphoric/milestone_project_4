@@ -14,7 +14,9 @@
 - checkout functionality
 - checkin functionality
 - renewal 
-- reservations 
+- reservations
+
+Implement BorrowRecord model
 
 - query dictionary to display human-readable ItemType and other attributes currently disaplying short codes 
 
