@@ -87,6 +87,7 @@ def edit_library_customer(request, user_id):
 
 def delete_library_customer(request, user_id):
     library_customer = get_object_or_404(LibraryCustomer, pk=user_id)
+
     library_customer.delete()
-    return redirect(reverse('users'))
+    return redirect(reverse('find_users'))
 
