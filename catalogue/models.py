@@ -36,7 +36,6 @@ class CatalogueItem(models.Model):
 class StockItem(models.Model):
     StockID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     catalogue_item = models.ForeignKey(CatalogueItem, on_delete=models.CASCADE, related_name='stock_items')
-    status = models.CharField(max_length=1024, null=True, blank=True)
 
     @property
     def BibNum(self):
