@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
- <div class="col" style="padding-top:20px">
+<div class="col" style="padding-top:20px">
     <div class="row">
         <div class="col-12 text-center" style="color:black;">
             <h2>User Account</h2>
@@ -28,15 +28,15 @@
             <form method="POST" action="{% url 'edit_library_customer' user_id %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form | crispy }}
-                <div class="d-flex gap-3 justify-content-start mt-3">
+                <!-- Button container -->
+                <div class="d-flex gap-3 justify-content-center align-items-center mt-3">
                     <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <!-- Delete form as part of the same flex container -->
+                    <form method="POST" action="{% url 'delete_library_customer' user_id %}" class="d-inline-block">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete Customer</button>
+                    </form>
                 </div>
-            </form>
-            
-            <!-- Separate delete form -->
-            <form method="POST" action="{% url 'delete_library_customer' user_id %}" class="d-inline-block mt-3">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Delete Customer</button>
             </form>
         </div>
 
@@ -47,8 +47,7 @@
             <div id="loan-history"></div>
         </div>
     </div>
-</div>
-{% endblock %}
+</div>{% endblock %}
 
 {% block postloadjs %}
 {% endblock %}
