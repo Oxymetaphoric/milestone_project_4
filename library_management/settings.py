@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', '')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'development' in os.environ
 
-ALLOWED_HOSTS = ['library-management-lms-c0ccc240f065.herokuapp.com', 'loclahost']
+ALLOWED_HOSTS = ['library-management-lms-c0ccc240f065.herokuapp.com', 'localhost']
 
 
 # Application definition
