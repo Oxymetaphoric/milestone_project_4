@@ -28,16 +28,17 @@
             <form method="POST" action="{% url 'edit_library_customer' user_id %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form | crispy }}
-                <!-- Button container -->
-                <div class="d-flex gap-3 justify-content-center align-items-center mt-3">
+                <!-- Save Changes button -->
+                <div class="d-flex gap-3 justify-content-center mt-3">
                     <button type="submit" class="btn btn-primary">Save Changes</button>
-                    <!-- Delete form as part of the same flex container -->
-                    <form method="POST" action="{% url 'delete_library_customer' user_id %}" class="d-inline-block">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Delete Customer</button>
-                    </form>
-                </div>
             </form>
+            
+            <!-- Delete form (outside the edit form) -->
+            <form method="POST" action="{% url 'delete_library_customer' user_id %}" class="d-inline-block mt-3">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete Customer</button>
+            </form>
+          </div>
         </div>
 
         <!-- Right Column - Loan History -->
@@ -47,7 +48,8 @@
             <div id="loan-history"></div>
         </div>
     </div>
-</div>{% endblock %}
+</div>
+{% endblock %}
 
 {% block postloadjs %}
 {% endblock %}

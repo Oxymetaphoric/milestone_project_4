@@ -55,8 +55,8 @@ def add_library_customer(request):
     if request.method == 'POST':
         form = CustomerForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect(reverse('home'))
+            new_customer = form.save()
+            return redirect(reverse('display_customer_details', args=[new_customer.user_id]))
     else: 
         form = CustomerForm()
     
