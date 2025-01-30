@@ -33,6 +33,7 @@
                             <th>Stock ID</th>
                             <th>Status</th>
                             <th>Actions</th>
+                            <th>Location</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,11 +45,11 @@
                                     {% csrf_token %}
                                     <input style="font-size:12pt; john wayne" type="hidden" name="stock_id" value="{{ item.StockID }}">
                                     <select name="status" onchange="this.form.submit()" class="form-select">
-                                        <option value="available" {% if item.status == 'available' %}selected{% endif %}>Available</option>
-                                        <option value="on_loan" {% if item.status == 'on_loan' %}selected{% endif %}>On Loan</option>
-                                        <option value="maintenance" {% if item.status == 'maintenance' %}selected{% endif %}>Maintenance</option>
-                                        <option value="missing" {%if item.status == 'missing' %}selected{% endif %}>Missing</option>
-                                        <option value="discarded" {% if item.status == 'discarded' %}selected{% endif %}>Discarded</option>
+                                        <option value="available" {% if item.Status == 'available' %}selected{% endif %}>Available</option>
+                                        <option value="on_loan" {% if item.Status == 'on_loan' %}selected{% endif %}>On Loan</option>
+                                        <option value="maintenance" {% if item.Status == 'maintenance' %}selected{% endif %}>Maintenance</option>
+                                        <option value="missing" {%if item.Status == 'missing' %}selected{% endif %}>Missing</option>
+                                        <option value="discarded" {% if item.Status == 'discarded' %}selected{% endif %}>Discarded</option>
                                     </select>
                                     <input type="hidden" name="update_stock_item" value="1">
                                 </form>

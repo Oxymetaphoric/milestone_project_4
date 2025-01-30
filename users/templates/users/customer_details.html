@@ -15,7 +15,6 @@
             </div>
         </div>
     </div>
-
     <div class="row">
         <!-- Left Column - User Details -->
         <div class="col-6" style="color: black;">
@@ -28,19 +27,25 @@
             <form method="POST" action="{% url 'edit_library_customer' user_id %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form | crispy }}
-                <!-- Save Changes button -->
+                
+                <!-- Button container for both buttons -->
                 <div class="d-flex gap-3 justify-content-center mt-3">
+                    <!-- Save Changes button -->
                     <button type="submit" class="btn btn-primary">Save Changes</button>
+                    
+                    <!-- Delete button (styled as a link to work with the other form) -->
+                    <button type="button" class="btn btn-danger" 
+                            onclick="document.getElementById('delete-form').submit();">
+                        Delete Customer
+                    </button>
+                </div>
             </form>
             
-            <!-- Delete form (outside the edit form) -->
-            <form method="POST" action="{% url 'delete_library_customer' user_id %}" class="d-inline-block mt-3">
+            <!-- Hidden Delete form -->
+            <form id="delete-form" method="POST" action="{% url 'delete_library_customer' user_id %}" class="d-none">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Delete Customer</button>
             </form>
-          </div>
         </div>
-
         <!-- Right Column - Loan History -->
         <div class="col-6" style="color: black;">
             <h4 class="text-center">Loan History</h4>
@@ -50,6 +55,5 @@
     </div>
 </div>
 {% endblock %}
-
 {% block postloadjs %}
 {% endblock %}

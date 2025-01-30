@@ -52,14 +52,11 @@ def search_catalogue(request):
                 'ItemCount'
             )
         )
-        
-        # Print results for debugging
-        print("search results:", results)
     
     return JsonResponse(results, safe=False)
 
-def book_info(request, BibNum):  # Changed from StockID to BibNum
-    catalogue_item = get_object_or_404(CatalogueItem, pk=BibNum)  # This is fine since BibNum is the pk
+def book_info(request, BibNum): 
+    catalogue_item = get_object_or_404(CatalogueItem, pk=BibNum)
     stock_items = catalogue_item.stock_items.all()
     
     if request.method == 'POST':        
@@ -92,7 +89,7 @@ def book_info(request, BibNum):  # Changed from StockID to BibNum
             new_status = request.POST.get('status')
             try:
                 stock_item = StockItem.objects.get(pk=stock_id)
-                stock_item.status = new_status
+                stock_item.Status = new_status
                 stock_item.save()
                 messages.success(request, 'Stock item updated successfully.')
             except StockItem.DoesNotExist:
