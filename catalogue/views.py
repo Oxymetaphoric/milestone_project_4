@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.contrib import messages
 from .models import CatalogueItem, StockItem 
 from .forms import StockForm
+import uuid
 
 # Create your views here.
 
@@ -104,19 +105,52 @@ def book_info(request, BibNum):
         }
     return render(request, 'catalogue/item_details.html', context)
 
-def check_in_out(request): 
- 
-    if request.method == 'POST':        
-        if 'check_out' in request.POST:    
-                stock_id = request.POST.get('stock_id')
-                new_location = 'on_loan'
-                try:
-                    stock_item = StockItem.objects.get(pk=stock_id)
-                    stock_item.Location = new_location
+def check_in(request):
+    if request.method == 'POST':
+        stock_id = request.POST.get('stock_id')
+        if stock_id:
+            try:
+                # Convert string to UUID for lookup
+                stock_id = uuid.UUID(stock_id)
+                stock_item = StockItem.objects.get(StockID=stock_id)
+                
+                # Check current status
+                if stock_item.Status == 'checked out':
+                    stock_item.Status = 'available'
+                    stock_item.Location = 'In Branch'
+                    stock_item.Borrower = None  # Clear borrower
                     stock_item.save()
-                    messages.success(request, 'Stock item location updated successfully.')
-                except StockItem.DoesNotExist:
-                    messages.error(request, 'Stockitem not found.')
+                    
+                    messages.success(
+                        request, 
+                        f'Successfully checked in: {stock_item.Title} (ID: {stock_item.StockID})'
+                    )
+                else:
+                    messages.warning(
+                        request, 
+                        f'Item {stock_item.Title} is not checked out (current status: {stock_item.Status})'
+                    )
+            except ValueError:
+                messages.error(request, 'Invalid Stock ID format')
+            except StockItem.DoesNotExist:
+                messages.error(request, f'No item found with ID: {stock_id}')
+        else:
+            messages.error(request, 'Please enter a Stock ID')
+    
+    # Get recent check-ins for display
+    recent_check_ins = StockItem.objects.filter(
+        Status='available'
+    ).order_by('-save')[:5]  # You might need to add a timestamp field
+    
+    context = {
+        'recent_check_ins': recent_check_ins
+    }
+    
+    return render(request, 'catalogue/check_in.html', context)
 
-    return render(request, 'catalogue/check_in_out.html')
+def check_out(request):
+    return render(request, 'catalogue/check_out.html')
+
+                    
+            
 
