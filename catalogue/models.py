@@ -37,6 +37,7 @@ class StockItem(models.Model):
     StockID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     Status = models.CharField(max_length=256, null=True, blank=True)
     Location = models.CharField(max_length=256, null=True, blank=True)
+    Borrower = models.CharField(max_length=256, null=True, blank=True)
     catalogue_item = models.ForeignKey(CatalogueItem, on_delete=models.CASCADE, related_name='stock_items')
 
     @property
