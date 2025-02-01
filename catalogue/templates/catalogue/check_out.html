@@ -8,155 +8,42 @@
 <div class="col container" style="padding-top:20px">
     <div class="row">
         <div class="col-12 text-center" style="color:black;">
-          <h2>Check Out</h2>
+            <h2>Check Out</h2>
             <div class="col-8 offset-2">
                 <hr/>  
             </div>
         </div>
     </div>
     <div class="col container">
-        <form id="search-form" method="GET" action="">
+        <form method="POST" action="{% url 'check_out' %}">
+            {% csrf_token %}
             <div class="input-group">
-                <input class="form-control border border-black rounded-0" type="text" name="q" id="search-input" placeholder="Enter user ID"> 
+                <input class="form-control border border-black rounded-0" 
+                       type="text" 
+                       name="stock_id" 
+                       placeholder="Enter Stock item ID">
+                <input class="form-control border border-black rounded-0" 
+                       type="text" 
+                       name="user_id" 
+                       placeholder="Enter User ID">
+                <button type="submit" class="btn btn-primary">Check Out</button>
             </div>
         </form>
-        <form id="search-form" method="GET" action="">
-            <div class="input-group">
-                <input class="form-control border border-black rounded-0" type="text" name="q" id="search-input" placeholder="Enter Stock Item ID">
+        
+        {% if messages %}
+            <div class="messages mt-3">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
             </div>
-        </form>
-        <div id="search-results" style="color:black;"></div>    
+        {% endif %}
     </div>
-    <div
+</div>
 {% endblock %}
 
 {% block postloadjs %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const searchForm = document.getElementById('search-form');
-    const searchInput = document.getElementById('search-input');
-    const resultsDiv = document.getElementById('search-results');
-    let searchTimeout;
 
-    // Add loading spinner function
-    function showLoadingSpinner() {
-        resultsDiv.innerHTML = `
-            <div class="text-center my-4">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-        `;
-    }
-
-    // Function to display error message
-    function showError(message) {
-        resultsDiv.innerHTML = `
-            <div class="alert alert-danger mt-3" role="alert">
-                ${message}
-            </div>
-        `;
-    }
-
-    // Function to render search results
-    function renderSearchResults(data) {
-        resultsDiv.innerHTML = ''; // Clear previous results
-        
-        if (data.length === 0) {
-            resultsDiv.innerHTML = `
-                <div class="alert alert-info mt-3" role="alert">
-                    No titles found matching your search.
-                </div>
-            `;
-            return;
-        }
-
-        const resultsContainer = document.createElement('div');
-        resultsContainer.className = 'mt-3';
-
-        data.forEach(item => {
-            const stockDiv = document.createElement('div');
-            stockDiv.className = 'search-result card mb-3';
-            stockDiv.innerHTML = `
-                <div class="card-body">
-                    <h5 class="card-title mb-2">
-                        <a href="/catalogue/item/${item.BibNum}/" 
-                           class="text-decoration-none text-primary">${item.Title}</a>
-                    </h5>
-                    <h6 class="card-subtitle mb-2 text-muted">By ${item.Author}</h6>
-                    <p class="card-text small text-muted mb-2">
-                        Published by ${item.Publisher}
-                    </p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="badge bg-secondary">${item.ItemCount || 0} copies</span>
-                        <a href="/catalogue/item/${item.BibNum}/" 
-                           class="btn btn-sm btn-outline-primary">View Details</a>
-                    </div>
-                </div>
-            `;
-            resultsContainer.appendChild(stockDiv);
-        });
-
-        resultsDiv.appendChild(resultsContainer);
-    }
-
-    // Search form submit handler
-    searchForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        const searchTerm = searchInput.value.trim();
-        
-        if (searchTerm.length < 2) {
-            showError('Please enter at least 2 characters to search.');
-            return;
-        }
-
-        showLoadingSpinner();
-
-        fetch(`/catalogue/search/?q=${encodeURIComponent(searchTerm)}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Search failed: ${response.statusText}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                renderSearchResults(data);
-            })
-            .catch(error => {
-                console.error('Search error:', error);
-                showError('An error occurred while searching. Please try again.');
-            });
-    });
-
-    // Optional: Add debounced live search as user types
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        const searchTerm = this.value.trim();
-        
-        if (searchTerm.length < 2) {
-            resultsDiv.innerHTML = '';
-            return;
-        }
-
-        searchTimeout = setTimeout(() => {
-            showLoadingSpinner();
-            
-            fetch(`/catalogue/search/?q=${encodeURIComponent(searchTerm)}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Search failed: ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    renderSearchResults(data);
-                })
-                .catch(error => {
-                    console.error('Search error:', error);
-                    showError('An error occurred while searching. Please try again.');
-                });
-        }, 300); // Debounce delay of 300ms
-    });
-});</script>
 {% endblock %}
 

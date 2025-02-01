@@ -2,7 +2,8 @@ from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib import messages
-from .models import CatalogueItem, StockItem 
+from .models import CatalogueItem, StockItem
+from users.models import LibraryCustomer 
 from .forms import StockForm
 import uuid
 
@@ -148,6 +149,37 @@ def check_in(request):
     return render(request, 'catalogue/check_in.html')
 
 def check_out(request):
+    if request.method == 'POST':
+        stock_id = request.POST.get('stock_id')
+        user_id = request.POST.get('user_id')
+        if stock_id and user_id:
+            try:
+                # Convert string to UUID for lookup
+                stock_id = uuid.UUID(stock_id)
+                stock_item = StockItem.objects.get(StockID=stock_id)
+                user = LibraryCustomer.objects.get(user_id=user_id)
+
+                if stock_item.Status == 'available':
+                    stock_item.Status = 'on_loan'
+                    stock_item.Location = 'on_loan'
+                    stock_item.Borrower = user.user_id
+                    stock_item.save()
+
+                    messages.success(
+                             request, 
+                             f'Successfully checked out: {stock_item.Title} to user: {stock_item.StockID}'
+                    )
+
+            except StockItem.ValueError:
+                messages.error(request, 'Invalid Stock ID format')
+            except LibraryCustomer.ValueError:
+                messages.error(request, 'Invalid user ID')
+            except LibraryCustomer.DoesNotExist:
+                messages.error(request, 'User not found')
+            except StockItem.DoesNotExist:
+                messages.error(request, f'No item found with ID: {stock_id}')
+        else:
+            messages.error(request, 'Please enter a Stock ID')       
     return render(request, 'catalogue/check_out.html')
 
                     
