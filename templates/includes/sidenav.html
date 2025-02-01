@@ -12,8 +12,8 @@
       </button>
       <div class="collapse show" id="home-collapse">
         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-          <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">check out</a></li>
-          <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">check in</a></li>
+          <li><a href="{% url 'check_out' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">check out</a></li>
+          <li><a href="{% url 'check_in' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">check in</a></li>
           <li><a href="{% url 'catalogue' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">search catalogue</a></li>
         </ul>
       </div>
