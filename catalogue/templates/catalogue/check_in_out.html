@@ -8,7 +8,7 @@
 <div class="col container" style="padding-top:20px">
     <div class="row">
         <div class="col-12 text-center" style="color:black;">
-          <h2>Catalogue Items</h2>
+          <h2>Check Out</h2>
             <div class="col-8 offset-2">
                 <hr/>  
             </div>
@@ -17,29 +17,17 @@
     <div class="col container">
         <form id="search-form" method="GET" action="">
             <div class="input-group">
-                <input class="form-control border border-black rounded-0" type="text" name="q" id="search-input" placeholder="Search catalogue">
-                <div class="input-group-append">
-                    <button class="btn btn-black border border-black rounded-0" type="submit">
-                        <span class="icon">
-                            <i class="fas fa-search"></i>
-                        </span>
-                    </button>
-                </div>
+                <input class="form-control border border-black rounded-0" type="text" name="q" id="search-input" placeholder="Enter user ID"> 
+            </div>
+        </form>
+        <form id="search-form" method="GET" action="">
+            <div class="input-group">
+                <input class="form-control border border-black rounded-0" type="text" name="q" id="search-input" placeholder="Enter Stock Item ID">
             </div>
         </form>
         <div id="search-results" style="color:black;"></div>    
     </div>
-
-  <div class="row" style="padding-top:20px">
-    <div class="row">
-      <div class="col" style="color:black">
-        <div id="search-results"></div>
-        <ul>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+    <div
 {% endblock %}
 
 {% block postloadjs %}

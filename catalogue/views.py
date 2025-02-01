@@ -95,35 +95,28 @@ def book_info(request, BibNum):
             except StockItem.DoesNotExist:
                 messages.error(request, 'Stock item not found.')
                 
-        elif 'check_out' in request.POST:    
-            stock_id = request.POST.get('stock_id')
-            new_location = request.POST.get('location')
-            try:
-                stock_item = StockItem.objects.get(pk=stock_id)
-                stock_item.Location = new_location
-                stock_item.save()
-                messages.success(request, 'Stock item location updated successfully.')
-            except StockItem.DoesNotExist:
-                messages.error(request, 'Stockitem not found.')
         return redirect('book_info', BibNum=BibNum)
 
     context = {
         'catalogue_item': catalogue_item,
         'stock_items': stock_items,
         'BibNum': BibNum,
-    }
+        }
     return render(request, 'catalogue/item_details.html', context)
 
-def modify_location(request, stock_id, BibNum):
-    stock_id = request.POST.get('stock_id')
-    new_location = request.POST.get('location')
-    catalogue_item = get_object_or_404(CatalogueItem, pk=BibNum)
-    stock_items = catalogue_item.stock_items.all()
+def check_in_out(request): 
+ 
+    if request.method == 'POST':        
+        if 'check_out' in request.POST:    
+                stock_id = request.POST.get('stock_id')
+                new_location = 'on_loan'
+                try:
+                    stock_item = StockItem.objects.get(pk=stock_id)
+                    stock_item.Location = new_location
+                    stock_item.save()
+                    messages.success(request, 'Stock item location updated successfully.')
+                except StockItem.DoesNotExist:
+                    messages.error(request, 'Stockitem not found.')
 
+    return render(request, 'catalogue/check_in_out.html')
 
-    context = {
-            'catalogue_item': catalogue_item,
-            'stock_items': stock_items,
-            'BibNum': BibNum,
-            }
-    return render(request, 'catalogue/check_in_out.html', context)
