@@ -115,7 +115,7 @@ def check_in(request):
                 stock_item = StockItem.objects.get(StockID=stock_id)
                 
                 # Check current status
-                if stock_item.Status == 'checked out':
+                if stock_item.Status == 'on_loan':
                     stock_item.Status = 'available'
                     stock_item.Location = 'In Branch'
                     stock_item.Borrower = None  # Clear borrower
@@ -136,17 +136,16 @@ def check_in(request):
                 messages.error(request, f'No item found with ID: {stock_id}')
         else:
             messages.error(request, 'Please enter a Stock ID')
+
+    # recent_check_ins = StockItem.objects.filter(
+    #         Status='available'
+    #         ).order_by('-save')[:5]  # You might need to add a timestamp field
+    # 
+    #context = {
+    #        'recent_check_ins': recent_check_ins
+    #        }
     
-    # Get recent check-ins for display
-    recent_check_ins = StockItem.objects.filter(
-        Status='available'
-    ).order_by('-save')[:5]  # You might need to add a timestamp field
-    
-    context = {
-        'recent_check_ins': recent_check_ins
-    }
-    
-    return render(request, 'catalogue/check_in.html', context)
+    return render(request, 'catalogue/check_in.html')
 
 def check_out(request):
     return render(request, 'catalogue/check_out.html')
