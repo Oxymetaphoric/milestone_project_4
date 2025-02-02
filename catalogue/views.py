@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 from .models import CatalogueItem, StockItem
 from users.models import LibraryCustomer 
 from .forms import StockForm
@@ -39,7 +40,7 @@ def search_catalogue(request):
             filters |= (
                 Q(Title__icontains=term) | 
                 Q(Author__icontains=term) | 
-                Q(Publisher__icontains=term)
+                Q(Publisher__icontains=term) 
             )
         
         # Get CatalogueItems and include BibNum as the identifier
@@ -159,29 +160,20 @@ def check_out(request):
                 stock_item = StockItem.objects.get(StockID=stock_id)
                 user = LibraryCustomer.objects.get(user_id=user_id)
 
-                if stock_item.Status == 'available':
-                    stock_item.Status = 'on_loan'
-                    stock_item.Location = 'on_loan'
-                    stock_item.Borrower = user.user_id
-                    stock_item.save()
+                stock_item.Status = 'on_loan'
+                stock_item.Location = user.user_id
+                stock_item.Borrower = user.user_id
+                stock_item.save()
 
-                    messages.success(
-                             request, 
-                             f'Successfully checked out: {stock_item.Title} to user: {stock_item.StockID}'
-                    )
+                messages.success(
+                         request, 
+                         f'Successfully checked out: {stock_item.Title} to user: {stock_item.StockID}'
+                )
 
-            except StockItem.ValueError:
-                messages.error(request, 'Invalid Stock ID format')
-            except LibraryCustomer.ValueError:
-                messages.error(request, 'Invalid user ID')
-            except LibraryCustomer.DoesNotExist:
-                messages.error(request, 'User not found')
-            except StockItem.DoesNotExist:
-                messages.error(request, f'No item found with ID: {stock_id}')
+            except ValueError:  # This catches both UUID and general ValueError
+                messages.error(request, 'Invalid ID format')
+            except ObjectDoesNotExist:  # This will catch both model's DoesNotExist exceptions
+                messages.error(request, 'Item or user not found')
         else:
-            messages.error(request, 'Please enter a Stock ID')       
+            messages.error(request, 'Please enter both Stock ID and User ID')
     return render(request, 'catalogue/check_out.html')
-
-                    
-            
-

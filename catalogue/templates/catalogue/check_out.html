@@ -17,16 +17,22 @@
     <div class="col container">
         <form method="POST" action="{% url 'check_out' %}">
             {% csrf_token %}
-            <div class="input-group">
-                <input class="form-control border border-black rounded-0" 
-                       type="text" 
-                       name="stock_id" 
-                       placeholder="Enter Stock item ID">
-                <input class="form-control border border-black rounded-0" 
-                       type="text" 
-                       name="user_id" 
-                       placeholder="Enter User ID">
-                <button type="submit" class="btn btn-primary">Check Out</button>
+            <div class="d-flex flex-column gap-3">
+                <div class="input-group">
+                    <input class="form-control border border-black rounded-0" 
+                           type="text" 
+                           name="stock_id" 
+                           placeholder="Enter Stock item ID">
+                </div>
+                <div class="input-group">
+                    <input class="form-control border border-black rounded-0" 
+                           type="text" 
+                           name="user_id" 
+                           placeholder="Enter User ID">
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary w-100">Check Out</button>
+                </div>
             </div>
         </form>
         
@@ -40,8 +46,7 @@
             </div>
         {% endif %}
     </div>
-</div>
-{% endblock %}
+</div>{% endblock %}
 
 {% block postloadjs %}
 

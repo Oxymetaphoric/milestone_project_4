@@ -14,15 +14,15 @@
             </div>
         </div>
     </div>
-    <div class="col container">
+    <div class="col container gap-3">
         <form method="POST" action="{% url 'check_in' %}">
             {% csrf_token %}
             <div class="input-group">
-                <input class="form-control border border-black rounded-0" 
+                <input class="gap-3 form-control border border-black rounded-0" 
                        type="text" 
                        name="stock_id" 
                        placeholder="Enter Stock item ID">
-                <button type="submit" class="btn btn-primary">Check In</button>
+                <button type="submit" class="btn btn-primary gap-3">Check In</button>
             </div>
         </form>
         
