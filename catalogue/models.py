@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from users.models import LibraryCustomer
 import uuid
 
 """"
@@ -35,7 +36,14 @@ class CatalogueItem(models.Model):
 
 class StockItem(models.Model):
     StockID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    Status = models.CharField(max_length=256, null=True, blank=True)
+    Status = models.CharField(max_length=20, choices=[
+        ('active', 'Active'),
+        ('in branch', 'In Branch'),
+        ('overdue', 'Overdue'),
+        ('maintenance', 'Maintenance'),
+        ('discarded', 'Discarded'),
+        ('missing', 'Missing'),
+    ])
     Location = models.CharField(max_length=256, null=True, blank=True)
     Borrower = models.CharField(max_length=256, null=True, blank=True)
     last_updated = models.DateTimeField(auto_now=True) 
@@ -103,4 +111,26 @@ class StockItem(models.Model):
 @receiver(post_delete, sender=StockItem)
 def update_catalogue_item_count(sender, instance, **kwargs):
     instance.catalogue_item.update_item_count()
+
+class LoanItems(models.Model):
+    loan_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    stock_item = models.ForeignKey(StockItem, on_delete=models.CASCADE, related_name='loans')
+    borrower = models.ForeignKey('users.LibraryCustomer', on_delete=models.CASCADE, related_name='loans')
+    check_out_date = models.DateTimeField(auto_now_add=True)
+    return_date = models.DateTimeField(null=True, blank=True)
+    status = models.CharField(max_length=20, choices=[
+        ('active', 'Active'),
+        ('in branch', 'In Branch'),
+        ('overdue', 'Overdue'),
+        ('maintenance', 'Maintenance'),
+        ('discarded', 'Discarded'),
+        ('missing', 'Missing'),
+    ])
+
+    def __str__(self):
+        return f"{self.borrower.user_id} - {self.stock_item.Title}"
+
+    class Meta:
+        ordering = ['-check_out_date']
+
 

@@ -117,7 +117,7 @@ def check_in(request):
                 stock_item = StockItem.objects.get(StockID=stock_id)
                 
                 # Check current status
-                if stock_item.Status == 'on_loan':
+                if stock_item.Status == 'on loan':
                     stock_item.Status = 'available'
                     stock_item.Location = 'In Branch'
                     stock_item.Borrower = None  # Clear borrower
@@ -160,7 +160,7 @@ def check_out(request):
                 stock_item = StockItem.objects.get(StockID=stock_id)
                 user = LibraryCustomer.objects.get(user_id=user_id)
 
-                stock_item.Status = 'on_loan'
+                stock_item.Status = 'on loan'
                 stock_item.Location = user.user_id
                 stock_item.Borrower = user.user_id
                 stock_item.save()
