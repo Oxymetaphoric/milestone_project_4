@@ -50,7 +50,32 @@
         <div class="col-6" style="color: black;">
             <h4 class="text-center">Loan History</h4>
             <hr/>
-            <div id="loan-history"></div>
+            <div id="loan-history">
+                {% if loan_history %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Stock ID</th>
+                                <th>Check Out Date</th>
+                                <th>Return Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for loan in loan_history %}
+                                <tr>
+                                    <td>{{ loan.stock_item.Title }}</td>
+                                    <td>{{ loan.stock_item.StockID }}  </td>
+                                    <td>{{ loan.check_out_date|date:"d M Y" }}</td>
+                                    <td>{{ loan.return_date|date:"d M Y"|default:"-" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="text-center">No loan history available</p>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
