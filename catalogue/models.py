@@ -4,6 +4,14 @@ from django.dispatch import receiver
 from users.models import LibraryCustomer
 import uuid
 
+ITEM_STATUS_CHOICES = [
+    ('available', 'Available'),
+    ('overdue', 'Overdue'),
+    ('maintenance', 'Maintenance'),
+    ('discarded', 'Discarded'),
+    ('missing', 'Missing'),
+    ]
+
 """"
 the dictionary provided w/ the dataset can be queried directly
 
@@ -36,14 +44,7 @@ class CatalogueItem(models.Model):
 
 class StockItem(models.Model):
     StockID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    Status = models.CharField(max_length=20, choices=[
-        ('active', 'Active'),
-        ('in branch', 'In Branch'),
-        ('overdue', 'Overdue'),
-        ('maintenance', 'Maintenance'),
-        ('discarded', 'Discarded'),
-        ('missing', 'Missing'),
-    ])
+    Status = models.CharField(max_length=20, null=True, choices=ITEM_STATUS_CHOICES)
     Location = models.CharField(max_length=256, null=True, blank=True)
     Borrower = models.CharField(max_length=256, null=True, blank=True)
     last_updated = models.DateTimeField(auto_now=True) 
@@ -114,23 +115,15 @@ def update_catalogue_item_count(sender, instance, **kwargs):
 
 class LoanItems(models.Model):
     loan_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    stock_item = models.ForeignKey(StockItem, on_delete=models.CASCADE, related_name='loans')
-    borrower = models.ForeignKey('users.LibraryCustomer', on_delete=models.CASCADE, related_name='loans')
+    stock_item = models.ForeignKey(StockItem, on_delete=models.CASCADE, related_name='loan_history')
+    borrower = models.ForeignKey('users.LibraryCustomer', on_delete=models.CASCADE, related_name='loan_history')
     check_out_date = models.DateTimeField(auto_now_add=True)
     return_date = models.DateTimeField(null=True, blank=True)
-    status = models.CharField(max_length=20, choices=[
-        ('active', 'Active'),
-        ('in branch', 'In Branch'),
-        ('overdue', 'Overdue'),
-        ('maintenance', 'Maintenance'),
-        ('discarded', 'Discarded'),
-        ('missing', 'Missing'),
-    ])
+    status = models.CharField(max_length=20, choices=ITEM_STATUS_CHOICES)
 
     def __str__(self):
         return f"{self.borrower.user_id} - {self.stock_item.Title}"
 
     class Meta:
         ordering = ['-check_out_date']
-
 

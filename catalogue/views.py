@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from .models import CatalogueItem, StockItem
+from .models import CatalogueItem, StockItem, LoanItems
 from users.models import LibraryCustomer 
 from .forms import StockForm
 import uuid
@@ -61,6 +61,7 @@ def search_catalogue(request):
 def book_info(request, BibNum): 
     catalogue_item = get_object_or_404(CatalogueItem, pk=BibNum)
     stock_items = catalogue_item.stock_items.all()
+    loan_history = LoanItems.objects.filter(stock_item__in=stock_items).order_by('-check_out_date')[:10]
     
     if request.method == 'POST':        
         if 'add_copies' in request.POST:
@@ -104,6 +105,7 @@ def book_info(request, BibNum):
         'catalogue_item': catalogue_item,
         'stock_items': stock_items,
         'BibNum': BibNum,
+        'loan_history': loan_history,
         }
     return render(request, 'catalogue/item_details.html', context)
 
@@ -112,41 +114,24 @@ def check_in(request):
         stock_id = request.POST.get('stock_id')
         if stock_id:
             try:
-                # Convert string to UUID for lookup
                 stock_id = uuid.UUID(stock_id)
                 stock_item = StockItem.objects.get(StockID=stock_id)
                 
                 # Check current status
-                if stock_item.Status == 'on loan':
-                    stock_item.Status = 'available'
-                    stock_item.Location = 'In Branch'
-                    stock_item.Borrower = None  # Clear borrower
-                    stock_item.save()
-                    
-                    messages.success(
-                        request, 
-                        f'Successfully checked in: {stock_item.Title} (ID: {stock_item.StockID})'
-                    )
-                else:
-                    messages.warning(
-                        request, 
-                        f'Item {stock_item.Title} is not checked out (current status: {stock_item.Status})'
-                    )
+                stock_item.Status = 'available'
+                stock_item.Location = 'In Branch'
+                stock_item.Borrower = None  # Clear borrower
+                stock_item.save()
+                
+                messages.success(
+                    request, 
+                    f'Successfully checked in: {stock_item.Title} (ID: {stock_item.StockID})'
+                )
             except ValueError:
                 messages.error(request, 'Invalid Stock ID format')
-            except StockItem.DoesNotExist:
-                messages.error(request, f'No item found with ID: {stock_id}')
         else:
             messages.error(request, 'Please enter a Stock ID')
 
-    # recent_check_ins = StockItem.objects.filter(
-    #         Status='available'
-    #         ).order_by('-save')[:5]  # You might need to add a timestamp field
-    # 
-    #context = {
-    #        'recent_check_ins': recent_check_ins
-    #        }
-    
     return render(request, 'catalogue/check_in.html')
 
 def check_out(request):
@@ -155,7 +140,6 @@ def check_out(request):
         user_id = request.POST.get('user_id')
         if stock_id and user_id:
             try:
-                # Convert string to UUID for lookup
                 stock_id = uuid.UUID(stock_id)
                 stock_item = StockItem.objects.get(StockID=stock_id)
                 user = LibraryCustomer.objects.get(user_id=user_id)
