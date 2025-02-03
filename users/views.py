@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.contrib import messages
 from .models import LibraryCustomer 
 from .forms import CustomerForm
+from catalogue.models import LoanItems
 
 def find_users(request):
     return render(request, 'users/users_home.html' )
@@ -91,4 +92,18 @@ def delete_library_customer(request, user_id):
     library_customer.delete()
 
     return redirect(reverse('find_users'))
+
+def user_loan_history(request):
+    # Get the current logged-in user's LibraryCustomer instance
+    library_customer = request.user.librarycustomer
+
+    # Fetch loan history for this user
+    loan_history = LoanItems.objects.filter(
+        borrower=library_customer
+    ).order_by('-check_out_date')
+
+    context = {
+        'loan_history': loan_history
+    }
+    return render(request, 'users/user_profile.html', context)
 
