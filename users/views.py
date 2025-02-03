@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.http import JsonResponse
 from django.db.models import Q
 from django.contrib import messages
+from django.core.paginator import Paginator
 from .models import LibraryCustomer 
 from .forms import CustomerForm
 from catalogue.models import LoanItems
@@ -94,16 +95,21 @@ def delete_library_customer(request, user_id):
     return redirect(reverse('find_users'))
 
 def user_loan_history(request):
-    # Get the current logged-in user's LibraryCustomer instance
     library_customer = request.user.librarycustomer
-
-    # Fetch loan history for this user
+    
+    # Get the page number from the request
+    page_number = request.GET.get('page', 1)
+    
+    # Fetch loan history
     loan_history = LoanItems.objects.filter(
         borrower=library_customer
     ).order_by('-check_out_date')
-
+    
+    # Add pagination
+    paginator = Paginator(loan_history, 10)  # 10 items per page
+    page_obj = paginator.get_page(page_number)
+    
     context = {
-        'loan_history': loan_history
+        'loan_history': page_obj
     }
     return render(request, 'users/user_profile.html', context)
-
