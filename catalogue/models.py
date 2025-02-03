@@ -5,6 +5,7 @@ from users.models import LibraryCustomer
 import uuid
 
 ITEM_STATUS_CHOICES = [
+    ('on_loan', 'On Loan'),
     ('available', 'Available'),
     ('overdue', 'Overdue'),
     ('maintenance', 'Maintenance'),

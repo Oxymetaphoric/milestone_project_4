@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 from .models import CatalogueItem, StockItem, LoanItems
 from users.models import LibraryCustomer 
 from .forms import StockForm
@@ -109,31 +110,6 @@ def book_info(request, BibNum):
         }
     return render(request, 'catalogue/item_details.html', context)
 
-def check_in(request):
-    if request.method == 'POST':
-        stock_id = request.POST.get('stock_id')
-        if stock_id:
-            try:
-                stock_id = uuid.UUID(stock_id)
-                stock_item = StockItem.objects.get(StockID=stock_id)
-                
-                # Check current status
-                stock_item.Status = 'available'
-                stock_item.Location = 'In Branch'
-                stock_item.Borrower = None  # Clear borrower
-                stock_item.save()
-                
-                messages.success(
-                    request, 
-                    f'Successfully checked in: {stock_item.Title} (ID: {stock_item.StockID})'
-                )
-            except ValueError:
-                messages.error(request, 'Invalid Stock ID format')
-        else:
-            messages.error(request, 'Please enter a Stock ID')
-
-    return render(request, 'catalogue/check_in.html')
-
 def check_out(request):
     if request.method == 'POST':
         stock_id = request.POST.get('stock_id')
@@ -143,21 +119,75 @@ def check_out(request):
                 stock_id = uuid.UUID(stock_id)
                 stock_item = StockItem.objects.get(StockID=stock_id)
                 user = LibraryCustomer.objects.get(user_id=user_id)
-
-                stock_item.Status = 'on loan'
+                
+                # Update or create a single loan record for this stock item
+                loan, created = LoanItems.objects.get_or_create(
+                    stock_item=stock_item,
+                    defaults={
+                        'borrower': user,
+                        'status': 'on_loan'
+                    }
+                )
+                
+                # If not a new record, update the existing one
+                if not created:
+                    loan.borrower = user
+                    loan.status = 'on_loan'
+                    loan.return_date = None
+                    loan.save()
+                
+                # Update stock item
+                stock_item.Status = 'on_loan'
                 stock_item.Location = user.user_id
                 stock_item.Borrower = user.user_id
                 stock_item.save()
-
+                
                 messages.success(
-                         request, 
-                         f'Successfully checked out: {stock_item.Title} to user: {stock_item.StockID}'
+                    request,
+                    f'Successfully checked out: {stock_item.Title} to user: {user.user_id}'
                 )
-
-            except ValueError:  # This catches both UUID and general ValueError
+            except ValueError:
                 messages.error(request, 'Invalid ID format')
-            except ObjectDoesNotExist:  # This will catch both model's DoesNotExist exceptions
+            except ObjectDoesNotExist:
                 messages.error(request, 'Item or user not found')
         else:
             messages.error(request, 'Please enter both Stock ID and User ID')
     return render(request, 'catalogue/check_out.html')
+
+def check_in(request):
+    if request.method == 'POST':
+        stock_id = request.POST.get('stock_id')
+        if stock_id:
+            try:
+                stock_id = uuid.UUID(stock_id)
+                stock_item = StockItem.objects.get(StockID=stock_id)
+                
+                # Find the active loan for this stock item
+                loan = LoanItems.objects.filter(
+                    stock_item=stock_item, 
+                    status='on_loan'
+                ).first()
+                
+                if loan:
+                    # Update the loan record
+                    loan.return_date = timezone.now()
+                    loan.status = 'returned'
+                    loan.save()
+                
+                # Update stock item
+                stock_item.Status = 'available'
+                stock_item.Location = 'In Branch'
+                stock_item.Borrower = None
+                stock_item.save()
+                
+                messages.success(
+                    request,
+                    f'Successfully checked in: {stock_item.Title} (ID: {stock_item.StockID})'
+                )
+            except ValueError:
+                messages.error(request, 'Invalid Stock ID format')
+            except StockItem.DoesNotExist:
+                messages.error(request, 'Stock item not found')
+        else:
+            messages.error(request, 'Please enter a Stock ID')
+    return render(request, 'catalogue/check_in.html')
