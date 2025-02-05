@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from users.models import LibraryCustomer
+from users.models import LibraryCustomer, CurrentLoan, LoanHistory
 import uuid
 
 ITEM_STATUS_CHOICES = [
@@ -102,6 +102,10 @@ class StockItem(models.Model):
     @property
     def ItemCollection(self):
         return self.catalogue_item.ItemCollection
+
+    @property
+    def current_loan(self):
+        return self.current_loan.first() 
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

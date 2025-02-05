@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from .models import CatalogueItem, StockItem 
-from users.models import LibraryCustomer 
+from users.models import LibraryCustomer, CurrentLoan, LoanHistory 
 from .forms import StockForm
 import uuid
 
@@ -62,7 +62,6 @@ def search_catalogue(request):
 def book_info(request, BibNum): 
     catalogue_item = get_object_or_404(CatalogueItem, pk=BibNum)
     stock_items = catalogue_item.stock_items.all()
-    loan_history = LoanItems.objects.filter(stock_item__in=stock_items).order_by('-check_out_date')[:10]
     
     if request.method == 'POST':        
         if 'add_copies' in request.POST:
@@ -106,7 +105,6 @@ def book_info(request, BibNum):
         'catalogue_item': catalogue_item,
         'stock_items': stock_items,
         'BibNum': BibNum,
-        'loan_history': loan_history,
         }
     return render(request, 'catalogue/item_details.html', context)
 

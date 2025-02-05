@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 
@@ -35,7 +36,7 @@ class LibraryCustomer(models.Model):
     def __str__(self):
         return str(self.user_id)
 
-class CurrentLoans(models.Model):
+class CurrentLoan(models.Model):
     customer = models.ForeignKey(LibraryCustomer, on_delete=models.CASCADE, related_name='current_loans')
     stock_item = models.ForeignKey('catalogue.StockItem', on_delete=models.CASCADE, related_name='current_loan')
     loan_date = models.DateTimeField(auto_now_add=True)
@@ -44,6 +45,9 @@ class CurrentLoans(models.Model):
     class Meta:
         unique_together = ['customer', 'stock_item']  # Ensure a stock item isn't loaned to multiple customers
         ordering = ['-loan_date']
+
+    def is_overdue(self):
+        return timezone.now() > self.due_date
 
 class LoanHistory(models.Model):
     customer = models.ForeignKey(LibraryCustomer, on_delete=models.CASCADE, related_name='loan_history')

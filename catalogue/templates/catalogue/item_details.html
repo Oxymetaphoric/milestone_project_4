@@ -47,6 +47,7 @@
                                     <select name="status" onchange="this.form.submit()" class="form-select">
                                         <option value="available" {% if item.Status == 'available' %}selected{% endif %}>Available</option>
                                         <option value="on_loan" {% if item.Status == 'on_loan' %}selected{% endif %}>On Loan</option>
+                                        <option value="overdue" {% if item_status == 'overdue' %}selected{% endif %}>Overdue</option>
                                         <option value="maintenance" {% if item.Status == 'maintenance' %}selected{% endif %}>Maintenance</option>
                                         <option value="missing" {%if item.Status == 'missing' %}selected{% endif %}>Missing</option>
                                         <option value="discarded" {% if item.Status == 'discarded' %}selected{% endif %}>Discarded</option>
@@ -62,7 +63,7 @@
                                 </form>
                             </td>
                             <td>
-                                {{ item.Location }}
+                              <small>{{ item.Location }}<small>
                             </td>
                         </tr>
                         {% endfor %}
@@ -81,7 +82,8 @@
             {% endif %}
         </div>
     </div>
-</div>{% endblock %}
+</div>
+{% endblock %}
 
 {% block postloadjs %}
 {% endblock %}
