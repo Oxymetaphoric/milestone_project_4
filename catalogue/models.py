@@ -114,17 +114,4 @@ class StockItem(models.Model):
 def update_catalogue_item_count(sender, instance, **kwargs):
     instance.catalogue_item.update_item_count()
 
-class LoanItems(models.Model):
-    loan_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    stock_item = models.ForeignKey(StockItem, on_delete=models.CASCADE, related_name='loan_history')
-    borrower = models.ForeignKey('users.LibraryCustomer', on_delete=models.CASCADE, related_name='loan_history')
-    check_out_date = models.DateTimeField(auto_now_add=True)
-    return_date = models.DateTimeField(null=True, blank=True)
-    status = models.CharField(max_length=20, choices=ITEM_STATUS_CHOICES)
-
-    def __str__(self):
-        return f"{self.borrower.user_id} - {self.stock_item.Title}"
-
-    class Meta:
-        ordering = ['-check_out_date']
 

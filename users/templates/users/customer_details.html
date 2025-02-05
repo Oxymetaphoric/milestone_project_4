@@ -50,49 +50,7 @@
         <div class="col-6" style="color: black;">
             <h4 class="text-center">Loan History</h4>
             <hr/>
-            <div id="loan-history">
-                {% if loan_history %}
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Stock ID</th>
-                                <th>Check Out Date</th>
-                                <th>Return Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for loan in loan_history %}
-                                <tr>
-                                    <td>{{ loan.stock_item.Title }}</td>
-                                    <td>{{ loan.stock_item.StockID }}  </td>
-                                    <td>{{ loan.check_out_date|date:"d M Y" }}</td>
-                                    <td>{{ loan.return_date|date:"d M Y"|default:"-" }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    <div class="pagination">
-                        <span class="step-links">
-                            {% if loan_history.has_previous %}
-                                <a href="?page=1">&laquo; first</a>
-                                <a href="?page={{ loan_history.previous_page_number }}">previous</a>
-                            {% endif %}
-
-                            <span class="current">
-                                Page {{ loan_history.number }} of {{ loan_history.paginator.num_pages }}.
-                            </span>
-
-                            {% if loan_history.has_next %}
-                                <a href="?page={{ loan_history.next_page_number }}">next</a>
-                                <a href="?page={{ loan_history.paginator.num_pages }}">last &raquo;</a>
-                            {% endif %}
-                        </span>
-                    </div>
-                {% else %}
-                    <p class="text-center">No loan history available</p>
-                {% endif %}
-            </div>
+            <div id="loan-history"></div>
         </div>
     </div>
 </div>

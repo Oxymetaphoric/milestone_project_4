@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
-from .models import CatalogueItem, StockItem, LoanItems
+from .models import CatalogueItem, StockItem 
 from users.models import LibraryCustomer 
 from .forms import StockForm
 import uuid
@@ -120,22 +120,6 @@ def check_out(request):
                 stock_item = StockItem.objects.get(StockID=stock_id)
                 user = LibraryCustomer.objects.get(user_id=user_id)
                 
-                # Update or create a single loan record for this stock item
-                loan, created = LoanItems.objects.get_or_create(
-                    stock_item=stock_item,
-                    defaults={
-                        'borrower': user,
-                        'status': 'on_loan'
-                    }
-                )
-                
-                # If not a new record, update the existing one
-                if not created:
-                    loan.borrower = user
-                    loan.status = 'on_loan'
-                    loan.return_date = None
-                    loan.save()
-                
                 # Update stock item
                 stock_item.Status = 'on_loan'
                 stock_item.Location = user.user_id
@@ -161,18 +145,6 @@ def check_in(request):
             try:
                 stock_id = uuid.UUID(stock_id)
                 stock_item = StockItem.objects.get(StockID=stock_id)
-                
-                # Find the active loan for this stock item
-                loan = LoanItems.objects.filter(
-                    stock_item=stock_item, 
-                    status='on_loan'
-                ).first()
-                
-                if loan:
-                    # Update the loan record
-                    loan.return_date = timezone.now()
-                    loan.status = 'returned'
-                    loan.save()
                 
                 # Update stock item
                 stock_item.Status = 'available'

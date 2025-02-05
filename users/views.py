@@ -6,7 +6,6 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from .models import LibraryCustomer 
 from .forms import CustomerForm
-from catalogue.models import LoanItems
 
 def find_users(request):
     return render(request, 'users/users_home.html' )
@@ -93,23 +92,3 @@ def delete_library_customer(request, user_id):
     library_customer.delete()
 
     return redirect(reverse('find_users'))
-
-def user_loan_history(request):
-    library_customer = request.user.librarycustomer
-    
-    # Get the page number from the request
-    page_number = request.GET.get('page', 1)
-    
-    # Fetch loan history
-    loan_history = LoanItems.objects.filter(
-        borrower=library_customer
-    ).order_by('-check_out_date')
-    
-    # Add pagination
-    paginator = Paginator(loan_history, 10)  # 10 items per page
-    page_obj = paginator.get_page(page_number)
-    
-    context = {
-        'loan_history': page_obj
-    }
-    return render(request, 'users/user_profile.html', context)
