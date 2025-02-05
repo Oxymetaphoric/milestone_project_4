@@ -113,7 +113,7 @@ def check_out(request):
         stock_id = request.POST.get('stock_id')
         user_id = request.POST.get('user_id')
         if stock_id and user_id:
-            try:
+            # try:
                 stock_id = uuid.UUID(stock_id)
                 stock_item = StockItem.objects.get(StockID=stock_id)
                 user = LibraryCustomer.objects.get(user_id=user_id)
@@ -128,10 +128,10 @@ def check_out(request):
                     request,
                     f'Successfully checked out: {stock_item.Title} to user: {user.user_id}'
                 )
-            except ValueError:
-                messages.error(request, 'Invalid ID format')
-            except ObjectDoesNotExist:
-                messages.error(request, 'Item or user not found')
+            # except ValueError:
+            #     messages.error(request, 'Invalid ID format')
+            # except ObjectDoesNotExist:
+            #     messages.error(request, 'Item or user not found')
         else:
             messages.error(request, 'Please enter both Stock ID and User ID')
     return render(request, 'catalogue/check_out.html')
@@ -140,7 +140,7 @@ def check_in(request):
     if request.method == 'POST':
         stock_id = request.POST.get('stock_id')
         if stock_id:
-            try:
+            # try:
                 stock_id = uuid.UUID(stock_id)
                 stock_item = StockItem.objects.get(StockID=stock_id)
                 
@@ -154,10 +154,10 @@ def check_in(request):
                     request,
                     f'Successfully checked in: {stock_item.Title} (ID: {stock_item.StockID})'
                 )
-            except ValueError:
-                messages.error(request, 'Invalid Stock ID format')
-            except StockItem.DoesNotExist:
-                messages.error(request, 'Stock item not found')
+            # except ValueError:
+            #     messages.error(request, 'Invalid Stock ID format')
+            # except StockItem.DoesNotExist:
+            #     messages.error(request, 'Stock item not found')
         else:
             messages.error(request, 'Please enter a Stock ID')
     return render(request, 'catalogue/check_in.html')
