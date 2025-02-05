@@ -35,4 +35,26 @@ class LibraryCustomer(models.Model):
     def __str__(self):
         return str(self.user_id)
 
+class CurrentLoans(models.Model):
+    customer = models.ForeignKey(LibraryCustomer, on_delete=models.CASCADE, related_name='current_loans')
+    stock_item = models.ForeignKey('catalogue.StockItem', on_delete=models.CASCADE, related_name='current_loan')
+    loan_date = models.DateTimeField(auto_now_add=True)
+    due_date = models.DateTimeField()  # Optional: to track when item should be returned
 
+    class Meta:
+        unique_together = ['customer', 'stock_item']  # Ensure a stock item isn't loaned to multiple customers
+        ordering = ['-loan_date']
+
+class LoanHistory(models.Model):
+    customer = models.ForeignKey(LibraryCustomer, on_delete=models.CASCADE, related_name='loan_history')
+    stock_item = models.ForeignKey('catalogue.StockItem', on_delete=models.CASCADE, related_name='loan_history')
+    check_out_date = models.DateTimeField()
+    return_date = models.DateTimeField()
+    status = models.CharField(max_length=20, choices=[
+        ('completed', 'Completed'),
+        ('overdue', 'Overdue'),
+        ('lost', 'Lost')
+    ])
+
+    class Meta:
+        ordering = ['-check_out_date']
