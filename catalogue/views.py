@@ -8,6 +8,7 @@ from .models import CatalogueItem, StockItem
 from users.models import LibraryCustomer, CurrentLoan, LoanHistory 
 from .forms import StockForm
 import uuid
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 
@@ -113,36 +114,71 @@ def check_out(request):
         stock_id = request.POST.get('stock_id')
         user_id = request.POST.get('user_id')
         if stock_id and user_id:
-            # try:
+            try:
                 stock_id = uuid.UUID(stock_id)
-                stock_item = StockItem.objects.get(StockID=stock_id)
-                user = LibraryCustomer.objects.get(user_id=user_id)
+                try:
+                    stock_item = StockItem.objects.get(StockID=stock_id)
+                except StockItem.DoesNotExist:
+                    messages.error(request, 'Stock item not found')
+                    return render(request, 'catalogue/check_out.html')
                 
-                # Update stock item
+                try:
+                    user = LibraryCustomer.objects.get(user_id=user_id)
+                except LibraryCustomer.DoesNotExist:
+                    messages.error(request, 'User not found')
+                    return render(request, 'catalogue/check_out.html')
+                
                 stock_item.Status = 'on_loan'
                 stock_item.Location = user.user_id
                 stock_item.Borrower = user.user_id
                 stock_item.save()
                 
+                CurrentLoan.objects.create(
+                        customer=LibraryCustomer.objects.get(user_id=user_id),
+                        stock_item=stock_item,
+                        loan_date=timezone.now(),
+                        due_date=timezone.now(),
+                    )
                 messages.success(
                     request,
                     f'Successfully checked out: {stock_item.Title} to user: {user.user_id}'
                 )
-            # except ValueError:
-            #     messages.error(request, 'Invalid ID format')
-            # except ObjectDoesNotExist:
-            #     messages.error(request, 'Item or user not found')
-        else:
-            messages.error(request, 'Please enter both Stock ID and User ID')
+            except ValueError:
+                messages.error(request, 'Invalid ID format')
+                
     return render(request, 'catalogue/check_out.html')
 
 def check_in(request):
     if request.method == 'POST':
         stock_id = request.POST.get('stock_id')
         if stock_id:
-            # try:
+            try:
                 stock_id = uuid.UUID(stock_id)
-                stock_item = StockItem.objects.get(StockID=stock_id)
+                # First check if stock item exists
+                try:
+                    stock_item = StockItem.objects.get(StockID=stock_id)
+                except StockItem.DoesNotExist:
+                    messages.error(request, 'Stock item not found')
+                    return render(request, 'catalogue/check_in.html')
+                
+                # Then check for current loan
+                try:
+                    current_loan = CurrentLoan.objects.get(stock_item=stock_item)
+                    
+                    # Create loan history entry
+                    LoanHistory.objects.create(
+                        customer=current_loan.customer,
+                        stock_item=stock_item,
+                        check_out_date=current_loan.loan_date,
+                        return_date=timezone.now(),
+                        status='completed'
+                    )
+                    
+                    # Delete the current loan entry
+                    current_loan.delete()
+                    
+                except CurrentLoan.DoesNotExist:
+                    messages.warning(request, 'No active loan found for this item')
                 
                 # Update stock item
                 stock_item.Status = 'available'
@@ -154,10 +190,10 @@ def check_in(request):
                     request,
                     f'Successfully checked in: {stock_item.Title} (ID: {stock_item.StockID})'
                 )
-            # except ValueError:
-            #     messages.error(request, 'Invalid Stock ID format')
-            # except StockItem.DoesNotExist:
-            #     messages.error(request, 'Stock item not found')
+                
+            except ValueError:
+                messages.error(request, 'Invalid Stock ID format')
+                return render(request, 'catalogue/check_in.html')
         else:
             messages.error(request, 'Please enter a Stock ID')
     return render(request, 'catalogue/check_in.html')

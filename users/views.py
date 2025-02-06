@@ -1,10 +1,10 @@
-
-from django.shortcuts import render, get_object_or_404, reverse, redirect 
-from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.db.models import Q
+from django.http import JsonResponse
 from django.contrib import messages
-from django.core.paginator import Paginator
-from .models import LibraryCustomer 
+from django.core.exceptions import ObjectDoesNotExist
+from users.models import LibraryCustomer, CurrentLoan, LoanHistory 
+
 from .forms import CustomerForm
 
 def find_users(request):
@@ -33,6 +33,9 @@ def display_customer_details(request, user_id):
     A view to display and edit customer details.
     """
     library_customer = get_object_or_404(LibraryCustomer, user_id=user_id)
+    current_loans = CurrentLoan.objects.filter(
+            customer=user_id
+            ).order_by('due_date')
 
     if request.method == 'POST':
         form = CustomerForm(request.POST, instance=library_customer)
@@ -45,6 +48,7 @@ def display_customer_details(request, user_id):
         form = CustomerForm(instance=library_customer)
 
     context = {
+        'current_loans': current_loans,
         'customer': library_customer,
         'form': form,
         'user_id': user_id,
@@ -70,6 +74,10 @@ def add_library_customer(request):
 def edit_library_customer(request, user_id):
     library_customer = get_object_or_404(LibraryCustomer, pk=user_id)
     user_id=user_id
+    current_loans = CurrentLoan.objects.filter(
+            customer=library_customer
+            ).order_by('due_date')
+
     if request.method == 'POST':
         form = CustomerForm(request.POST, request.FILES, instance=library_customer)
         if form.is_valid():
@@ -83,6 +91,7 @@ def edit_library_customer(request, user_id):
         'form': form,
         'library_customer': library_customer,
         'user_id': user_id,
+        'current_loans': current_loans,
     }
 
     return render(request, template, context)
@@ -90,5 +99,5 @@ def edit_library_customer(request, user_id):
 def delete_library_customer(request, user_id):
     library_customer = get_object_or_404(LibraryCustomer, pk=user_id)
     library_customer.delete()
-
+    
     return redirect(reverse('find_users'))

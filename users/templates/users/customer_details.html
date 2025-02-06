@@ -51,6 +51,30 @@
             <h4 class="text-center">Current Loans</h4>
             <hr/>
             <div id="current-loans">
+                {% if current_loans %}
+                         <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Stock ID</th>
+                                    <th>Check Out Date</th>
+                                    <th>Due Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for loan in current_loans %}
+                                    <tr>
+                                        <td>{{ loan.stock_item.Title }}</td>
+                                        <td>{{ loan.stock_item.StockID }}</td>
+                                        <td>{{ loan.loan_date|date:"d M Y" }}</td>
+                                        <td>{{ loan.due_date|date:"d M Y" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                          </table>
+                {% else %}
+                    <p class="text-center">No current loans</p>
+                {% endif %}
             </div>
         </div>
     </div>
