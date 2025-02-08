@@ -2,83 +2,104 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block extra_css %}
-{% endblock %}
-
 {% block content %}
-<div class="col" style="padding-top:20px">
-    <div class="row">
-        <div class="col-12 text-center" style="color:black;">
+<div class="container col py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
             <h2>Customer Account</h2>
-            <div class="col-8 offset-2">
-                <hr/>
-            </div>
+            <hr/>
         </div>
     </div>
+
     <div class="row">
-        <!-- Left Column - User Details -->
-        <div class="col-6" style="color: black;">
-            <div class="row">
-                <h4 class="text-center">User Details</h4>
-                <hr/>
-            </div>
-            
-            <!-- Edit form -->
-            <form method="POST" action="{% url 'edit_library_customer' user_id %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form | crispy }}
-                
-                <!-- Button container for both buttons -->
-                <div class="d-flex gap-3 justify-content-center mt-3">
-                    <!-- Save Changes button -->
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                    
-                    <!-- Delete button (styled as a link to work with the other form) -->
-                    <button type="button" class="btn btn-danger" 
-                            onclick="document.getElementById('delete-form').submit();">
-                        Delete Customer
-                    </button>
+        <!-- User Details Card -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">User Details</h4>
                 </div>
-            </form>
-            
-            <!-- Hidden Delete form -->
-            <form id="delete-form" method="POST" action="{% url 'delete_library_customer' user_id %}" class="d-none">
-                {% csrf_token %}
-            </form>
+                <div class="card-body">
+                    <form method="POST" action="{% url 'edit_library_customer' user_id %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form | crispy }}
+                        
+                        <div class="d-flex gap-3 justify-content-center mt-3">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="button" class="btn btn-danger" 
+                                    onclick="if(confirm('Are you sure you want to delete this customer?')) document.getElementById('delete-form').submit();">
+                                Delete Customer
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <form id="delete-form" method="POST" action="{% url 'delete_library_customer' user_id %}" class="d-none">
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
         </div>
-        <!-- Right Column - Loan History -->
-        <div class="col-6" style="color: black;">
-            <h4 class="text-center">Current Loans</h4>
-            <hr/>
-            <div id="current-loans">
-                {% if current_loans %}
-                         <table class="table">
+
+        <!-- Current Loans Card -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Current Loans</h4>
+                    <a href="#" class="btn btn-outline-primary btn-sm">
+                        View Full History
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if current_loans %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <th>Title</th>
-                                    <th>Stock ID</th>
-                                    <th>Check Out Date</th>
                                     <th>Due Date</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for loan in current_loans %}
-                                    <tr>
-                                        <td>{{ loan.stock_item.Title }}</td>
-                                        <td>{{ loan.stock_item.StockID }}</td>
-                                        <td>{{ loan.loan_date|date:"d M Y" }}</td>
-                                        <td>{{ loan.due_date|date:"d M Y" }}</td>
-                                    </tr>
+                                <tr>
+                                    <td>
+                                        <div class="text-truncate" style="max-width: 200px;" data-bs-toggle="tooltip" 
+                                             title="{{ loan.stock_item.Title }}">
+                                            {{ loan.stock_item.Title }}
+                                        </div>
+                                    </td>
+                                    <td>{{ loan.due_date|date:"d M Y" }}</td>
+                                    <td>
+                                        {% if loan.is_overdue %}
+                                        <span class="badge bg-danger">Overdue</span>
+                                        {% else %}
+                                        <span class="badge bg-success">Current</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
                                 {% endfor %}
                             </tbody>
-                          </table>
-                {% else %}
-                    <p class="text-center">No current loans</p>
-                {% endif %}
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-center mb-0">No current loans</p>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
+
 {% block postloadjs %}
+<script>
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    });
+</script>
 {% endblock %}
