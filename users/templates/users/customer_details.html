@@ -48,8 +48,68 @@
                         View Full History
                     </a>
                 </div>
+            <div class="container col py-4">
                 <div class="card-body">
                     {% if current_loans %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>check-in</th>
+                                    <th>lost item</th>                
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for loan in current_loans %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'book_info' loan.stock_item.BibNum %}">
+                                            <div class="text-truncate" style="max-width: 200px;" data-bs-toggle="tooltip" 
+                                                 title="{{ loan.stock_item.Title }}">
+                                                {{ loan.stock_item.Title }}
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td>{{ loan.due_date|date:"d M Y" }}</td>
+                                    <td>
+                                        {% if loan.is_overdue %}
+                                        <span class="badge bg-danger">Overdue</span>
+                                        {% else %}
+                                        <span class="badge bg-success">Current</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <form action="{% url 'check_in' %}" method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="stock_id" value="{{ loan.stock_item.StockID }}">
+                                            <button type="submit" class="btn btn-sm btn-success">Check In</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-center mb-0">No current loans</p>
+                    {% endif %}
+                </div>
+        </div>
+      </div>
+      <br>
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Fines</h4>
+                </div>
+                <div class="card-body">
+                    {% if fines %}
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
@@ -60,7 +120,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for loan in current_loans %}
+                                {% for fine in fines %}
                                 <tr>
                                     <td>
                                         <a href="{% url 'book_info' loan.stock_item.BibNum %}">
@@ -84,12 +144,14 @@
                         </table>
                     </div>
                     {% else %}
-                    <p class="text-center mb-0">No current loans</p>
+                    <p class="text-center mb-0">No current fines</p>
                     {% endif %}
-                </div>
             </div>
         </div>
     </div>
+  </div>
+  </div>
+</div>
 </div>
 {% endblock %}
 
