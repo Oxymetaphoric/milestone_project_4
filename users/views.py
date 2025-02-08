@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from users.models import LibraryCustomer, CurrentLoan, LoanHistory 
+from django.core.paginator import Paginator
 
 from .forms import CustomerForm
 
@@ -95,6 +96,21 @@ def edit_library_customer(request, user_id):
     }
 
     return render(request, template, context)
+
+def customer_loan_history(request, user_id):
+    customer = get_object_or_404(LibraryCustomer, id=user_id)
+    loan_history_list = LoanHistory.objects.filter(customer=customer).order_by('-loan_date')
+    
+    paginator = Paginator(loan_history_list, 10)  # Show 10 loans per page
+    page = request.GET.get('page')
+    loan_history = paginator.get_page(page)
+    
+    context = {
+        'customer': customer,
+        'loan_history': loan_history,
+        'user_id': user_id,
+    }
+    return render(request, 'library/loan_history.html', context)
 
 def delete_library_customer(request, user_id):
     library_customer = get_object_or_404(LibraryCustomer, pk=user_id)

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Loan History - {{ customer.first_name }} {{ customer.last_name }}</h2>
+                <a href="{% url 'view_library_customer' user_id %}" class="btn btn-outline-primary">
+                    Back to Account
+                </a>
+            </div>
+            <hr/>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search loans...">
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" id="timeFilter">
+                <option value="all">All Time</option>
+                <option value="last30">Last 30 Days</option>
+                <option value="last90">Last 90 Days</option>
+                <option value="lastyear">Last Year</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Loan History Table -->
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Title</th>
+                    <th>Stock ID</th>
+                    <th>Check Out Date</th>
+                    <th>Return Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loan in loan_history %}
+                <tr>
+                    <td>
+                        <div class="text-truncate" style="max-width: 300px;" data-bs-toggle="tooltip" 
+                             title="{{ loan.stock_item.Title }}">
+                            {{ loan.stock_item.Title }}
+                        </div>
+                    </td>
+                    <td>{{ loan.stock_item.StockID }}</td>
+                    <td>{{ loan.loan_date|date:"d M Y" }}</td>
+                    <td>{{ loan.return_date|date:"d M Y" }}</td>
+                    <td>
+                        {% if loan.returned_on_time %}
+                        <span class="badge bg-success">On Time</span>
+                        {% else %}
+                        <span class="badge bg-warning">Late</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No loan history found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if loan_history.has_other_pages %}
+    <nav aria-label="Loan history pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if loan_history.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ loan_history.previous_page_number }}">&laquo;</a>
+            </li>
+            {% endif %}
+
+            {% for num in loan_history.paginator.page_range %}
+            <li class="page-item {% if loan_history.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if loan_history.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ loan_history.next_page_number }}">&raquo;</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block postloadjs %}
+<script>
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    });
+</script>
+{% endblock %}
