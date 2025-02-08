@@ -191,6 +191,7 @@ def check_in(request):
                         fine_amount = Decimal(days_overdue) * DAILY_RATE
                     # Create loan history entry
                         Fine.objects.create(
+                                fine_id = uuid,
                                 customer=current_loan.customer,
                                 amunt=fine_amount,
                                 loan_history=loan_history

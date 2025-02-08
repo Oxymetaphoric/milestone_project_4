@@ -63,7 +63,11 @@
                                 </form>
                             </td>
                             <td>
-                                <small>{{item.Location}}</small>
+                                {% if item.Borrower %}
+                                    <a href="{% url 'display_customer_details' item.Borrower %}"<small>{{item.Location}}</small></a>
+                                {% else %}
+                                    <small>{{item.Status}}</small>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}

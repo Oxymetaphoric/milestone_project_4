@@ -39,7 +39,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Current Loans Card -->
         <div class="col-md-8 mb-4">
             <div class="card">
@@ -64,10 +63,12 @@
                                 {% for loan in current_loans %}
                                 <tr>
                                     <td>
-                                        <div class="text-truncate" style="max-width: 200px;" data-bs-toggle="tooltip" 
-                                             title="{{ loan.stock_item.Title }}">
-                                            {{ loan.stock_item.Title }}
-                                        </div>
+                                        <a href="{% url 'book_info' loan.stock_item.BibNum %}">
+                                            <div class="text-truncate" style="max-width: 200px;" data-bs-toggle="tooltip" 
+                                                 title="{{ loan.stock_item.Title }}">
+                                                {{ loan.stock_item.Title }}
+                                            </div>
+                                        </a>
                                     </td>
                                     <td>{{ loan.due_date|date:"d M Y" }}</td>
                                     <td>
