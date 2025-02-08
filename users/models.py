@@ -1,6 +1,10 @@
 from django.db import models
+from django.db.models import Sum
 from django.utils import timezone
+from decimal import Decimal
+import uuid
 
+FINE_CAP = Decimal('10.00')
 # Create your models here.
 
 class LibraryCustomer(models.Model):
@@ -32,6 +36,26 @@ class LibraryCustomer(models.Model):
             self.user_id = f"{prefix}{next_number:07d}"
 
         super().save(*args, **kwargs)
+    
+    def get_total_unpaid_fines(self):
+        return self.fines.filter(is_paid=False).aggregate(
+                total=models.Sum('amount')['total'] or Decimal('0.00'))
+
+    def pay_fine(self, fine_id):
+        try:
+            fine = self.fines.get(fine_id=fine_id, is_paid=False)
+            fine.is_paid = True
+            fine.date_paid = timezone.now()
+            fine.save()
+            return True
+        except Fine.DoesNotExist:
+            return False
+
+    def can_borrow(self):
+        unpaid_fines = self.get_total_unpaid_fines()
+        if unpaid_fines > FINE_CAP:
+            return False
+        return True
 
     def __str__(self):
         return str(self.user_id)
@@ -64,6 +88,8 @@ class LoanHistory(models.Model):
         ordering = ['-check_out_date']
 
 class Fine(models.Model):
+    
+    fine_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     customer = models.ForeignKey(LibraryCustomer, on_delete=models.CASCADE, related_name='fines')
     amount = models.DecimalField(max_digits=6, decimal_places=2)
     date_issued = models.DateTimeField(auto_now_add=True)
