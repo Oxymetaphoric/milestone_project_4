@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from users.models import LibraryCustomer, CurrentLoan, LoanHistory 
+from users.models import LibraryCustomer, CurrentLoan, LoanHistory, Fine 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .forms import CustomerForm
@@ -37,6 +37,9 @@ def display_customer_details(request, user_id):
     current_loans = CurrentLoan.objects.filter(
             customer=user_id
             ).order_by('due_date')
+    fines = Fine.objects.filter(
+            customer=library_customer
+            ).order_by('date_issued')
 
     if request.method == 'POST':
         form = CustomerForm(request.POST, instance=library_customer)
@@ -53,6 +56,7 @@ def display_customer_details(request, user_id):
         'customer': library_customer,
         'form': form,
         'user_id': user_id,
+        'fines': fines,
     }
 
     return render(request, 'users/customer_details.html', context)
@@ -79,6 +83,10 @@ def edit_library_customer(request, user_id):
             customer=library_customer
             ).order_by('due_date')
 
+    fines = Fine.objects.filter(
+            customer=library_customer
+            ).order_by('date_issued')
+
     if request.method == 'POST':
         form = CustomerForm(request.POST, request.FILES, instance=library_customer)
         if form.is_valid():
@@ -93,6 +101,7 @@ def edit_library_customer(request, user_id):
         'library_customer': library_customer,
         'user_id': user_id,
         'current_loans': current_loans,
+        'fines': fines,
     }
 
     return render(request, template, context)
