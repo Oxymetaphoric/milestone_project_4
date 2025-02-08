@@ -82,14 +82,19 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <form action="{% url 'check_in' %}" method="post">
+                                        <form action="{% url 'check_in' %}" method="POST">
                                             {% csrf_token %}
                                             <input type="hidden" name="stock_id" value="{{ loan.stock_item.StockID }}">
                                             <button type="submit" class="btn btn-sm btn-success">Check In</button>
                                         </form>
                                     </td>
                                     <td>
-                                        
+                                        <form action="{% url 'lost_item' %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="stock_id" value="{{ loan.stock_item.StockID }}">
+                                            <input type="hidden" name="user_id" value="{{ loan.stock_item.Borrower }}">
+                                            <button type="submit" class="btn btn-sm btn-danger">Lost item</button>
+                                        </form>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -110,48 +115,43 @@
                 </div>
                 <div class="card-body">
                     {% if fines %}
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Due Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for fine in fines %}
-                                <tr>
-                                    <td>
-                                        <a href="{% url 'book_info' loan.stock_item.BibNum %}">
-                                            <div class="text-truncate" style="max-width: 200px;" data-bs-toggle="tooltip" 
-                                                 title="{{ loan.stock_item.Title }}">
-                                                {{ loan.stock_item.Title }}
-                                            </div>
-                                        </a>
-                                    </td>
-                                    <td>{{ loan.due_date|date:"d M Y" }}</td>
-                                    <td>
-                                        {% if loan.is_overdue %}
-                                        <span class="badge bg-danger">Overdue</span>
-                                        {% else %}
-                                        <span class="badge bg-success">Current</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Date issued</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for fine in fines %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'book_info' fine.loan_history.stock_item.BibNum %}">
+                                                <div class="text-truncate" style="max-width: 200px;" data-bs-toggle="tooltip" 
+                                                     title="{{ fine.loan_history.stock_item.Title }}">
+                                                    {{ fine.loan_history.stock_item.Title }}
+                                                </div>
+                                            </a>
+                                        </td>
+                                        <td>{{ fine.date_issued|date:"d M Y" }}</td>
+                                        <td>
+                                            {{ fine.amount }}                                               
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     {% else %}
-                    <p class="text-center mb-0">No current fines</p>
+                        <p class="text-center mb-0">No current fines</p>
                     {% endif %}
             </div>
         </div>
     </div>
   </div>
   </div>
-</div>
 </div>
 {% endblock %}
 
