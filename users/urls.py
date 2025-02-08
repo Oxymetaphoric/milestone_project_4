@@ -7,5 +7,6 @@ urlpatterns = [
     path('edit/<str:user_id>/', views.edit_library_customer, name='edit_library_customer'),
     path('delete/<str:user_id>/', views.delete_library_customer, name='delete_library_customer'),
     path('search/', views.search_users, name='search_users'),
+    path('customer_loan_history/<str:user_id>/', views.customer_loan_history, name='customer_loan_history'),
     re_path(r'^(?P<user_id>[A-Za-z0-9]+)/$', views.display_customer_details, name='display_customer_details'),
 ]

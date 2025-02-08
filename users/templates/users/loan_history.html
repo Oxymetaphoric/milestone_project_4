@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<div class="container py-4">
+<div class="container col py-4">
     <!-- Header -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h2>Loan History - {{ customer.first_name }} {{ customer.last_name }}</h2>
-                <a href="{% url 'view_library_customer' user_id %}" class="btn btn-outline-primary">
+                <a href="{% url 'display_customer_details' user_id %}" class="btn btn-outline-primary">
                     Back to Account
                 </a>
             </div>
@@ -52,7 +52,7 @@
                         </div>
                     </td>
                     <td>{{ loan.stock_item.StockID }}</td>
-                    <td>{{ loan.loan_date|date:"d M Y" }}</td>
+                    <td>{{ loan.check_out_date|date:"d M Y" }}</td>
                     <td>{{ loan.return_date|date:"d M Y" }}</td>
                     <td>
                         {% if loan.returned_on_time %}
