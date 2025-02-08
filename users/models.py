@@ -64,8 +64,7 @@ class CurrentLoan(models.Model):
     customer = models.ForeignKey(LibraryCustomer, on_delete=models.CASCADE, related_name='current_loans')
     stock_item = models.ForeignKey('catalogue.StockItem', on_delete=models.CASCADE, related_name='current_loan')
     loan_date = models.DateTimeField(auto_now_add=True)
-    due_date = models.DateTimeField()  # Optional: to track when item should be returned
-
+    due_date = models.DateTimeField() 
     class Meta:
         unique_together = ['customer', 'stock_item']  # Ensure a stock item isn't loaned to multiple customers
         ordering = ['-loan_date']
@@ -89,13 +88,18 @@ class LoanHistory(models.Model):
 
 class Fine(models.Model):
     
-    fine_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+    fine_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     customer = models.ForeignKey(LibraryCustomer, on_delete=models.CASCADE, related_name='fines')
     amount = models.DecimalField(max_digits=6, decimal_places=2)
     date_issued = models.DateTimeField(auto_now_add=True)
     loan_history = models.OneToOneField('LoanHistory', on_delete=models.CASCADE, related_name='fine')
     is_paid = models.BooleanField(default=False)
     date_paid = models.DateTimeField(null=True, blank=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.fine_id:
+            self.fine_id = uuid.uuid4()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Fine of £{self.amount} for {self.customer}"
