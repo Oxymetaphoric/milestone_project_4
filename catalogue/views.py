@@ -5,10 +5,12 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from .models import CatalogueItem, StockItem 
-from users.models import LibraryCustomer, CurrentLoan, LoanHistory 
+from users.models import LibraryCustomer, CurrentLoan, LoanHistory, Fine 
 from .forms import StockForm
 import uuid
 from django.core.exceptions import ObjectDoesNotExist
+from decimal import Decimal
+from datetime import timedelta
 
 # Create your views here.
 
@@ -110,6 +112,7 @@ def book_info(request, BibNum):
     return render(request, 'catalogue/item_details.html', context)
 
 def check_out(request):
+    LOAN_PERIOD = 2
     if request.method == 'POST':
         stock_id = request.POST.get('stock_id')
         user_id = request.POST.get('user_id')
@@ -137,7 +140,7 @@ def check_out(request):
                         customer=LibraryCustomer.objects.get(user_id=user_id),
                         stock_item=stock_item,
                         loan_date=timezone.now(),
-                        due_date=timezone.now(),
+                        due_date=timezone.now()+timedelta(weeks=LOAN_PERIOD),
                     )
                 messages.success(
                     request,
@@ -164,16 +167,33 @@ def check_in(request):
                 # Then check for current loan
                 try:
                     current_loan = CurrentLoan.objects.get(stock_item=stock_item)
-                    
+                    return_date = timezone.now()
+                    days_overdue=0
+                    if return_date > current_loan.due_date:
+                        delta = return_date - current_loan.due_date
+                        days_overdue = delta.days
+
+                    status = 'completed'
+                    if days_overdue > 0:
+                        status = 'overdue'
+
                     # Create loan history entry
-                    LoanHistory.objects.create(
+                    loan_history = LoanHistory.objects.create(
                         customer=current_loan.customer,
                         stock_item=stock_item,
                         check_out_date=current_loan.loan_date,
-                        return_date=timezone.now(),
-                        status='completed'
+                        return_date=return_date,
+                        status=status
                     )
-                    
+                    if days_overdue > 0:
+                        DAILY_RATE = Decimal('0.50')
+                        fine_amount = Decimal(days_overdue)* DAILY_RATE
+
+                        Fine.objects.create(
+                                customer=current_loan.customer,
+                                amunt=fine_amount,
+                                loan_history=loan_history
+                                )
                     # Delete the current loan entry
                     current_loan.delete()
                     
