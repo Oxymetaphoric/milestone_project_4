@@ -13,6 +13,7 @@ from decimal import Decimal
 from datetime import timedelta
 
 DAILY_RATE = Decimal('0.50')
+LOST_ITEM = Decimal('10.00')
 LOAN_PERIOD = 2
 
 # Create your views here.
@@ -191,9 +192,8 @@ def check_in(request):
                         fine_amount = Decimal(days_overdue) * DAILY_RATE
                     # Create loan history entry
                         Fine.objects.create(
-                                fine_id = uuid,
                                 customer=current_loan.customer,
-                                amunt=fine_amount,
+                                amount=fine_amount,
                                 loan_history=loan_history
                                 )
 
@@ -220,3 +220,68 @@ def check_in(request):
         else:
             messages.error(request, 'Please enter a Stock ID')
     return render(request, 'catalogue/check_in.html')
+
+def lost_item(request):
+    if request.method == 'POST':
+        stock_id = request.POST.get('stock_id')
+        user_id = request.POST.get('user_id')
+        status = 'missing'  
+        if stock_id:
+            try:
+                stock_id = uuid.UUID(stock_id)
+                # First check if stock item exists
+                try:
+                    stock_item = StockItem.objects.get(StockID=stock_id)
+                except StockItem.DoesNotExist:
+                    messages.error(request, 'Stock item not found')
+                    return redirect('edit_library_customer', user_id)  
+                
+                # Then check for current loan
+                try:
+                    current_loan = CurrentLoan.objects.get(stock_item=stock_item)
+                    return_date = timezone.now()
+                    
+                    # Create loan history entry
+                    loan_history = LoanHistory.objects.create(
+                        customer=current_loan.customer,
+                        stock_item=stock_item,
+                        check_out_date=current_loan.loan_date,
+                        return_date=return_date,
+                        status=status
+                    )
+                    
+                    # Create fine - assuming LOST_ITEM is a decimal/integer amount
+                    Fine.objects.create(
+                        customer=current_loan.customer,
+                        amount=LOST_ITEM,
+                        loan_history=loan_history
+                    )
+                    
+                    # Delete the current loan entry
+                    current_loan.delete()
+                    
+                    # Update stock item
+                    stock_item.Status = 'missing'
+                    stock_item.Location = 'missing'
+                    stock_item.Borrower = None
+                    stock_item.save()
+                    
+                    messages.success(
+                        request,
+                        f'Item marked as lost: {stock_item.Title} (ID: {stock_item.StockID}). A fine of £{LOST_ITEM} has been added to the account.'
+                    )
+                    
+                    # Redirect to customer details
+                    return redirect('display_customer_details', user_id)
+                    
+                except CurrentLoan.DoesNotExist:
+                    messages.warning(request, 'No active loan found for this item')
+                    return redirect('display_customer_details', user_id)  # Add customer_id parameter
+                
+            except ValueError:
+                messages.error(request, 'Invalid Stock ID format')
+                return redirect('display_customer_details', user_id)  # Add customer_id parameter
+        else:
+            messages.error(request, 'Please enter a Stock ID')
+            return redirect('display_customer_details', user_id)
+            
