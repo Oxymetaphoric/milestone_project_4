@@ -67,7 +67,7 @@
                                 <tr>
                                     <td>
                                         <a href="{% url 'book_info' loan.stock_item.BibNum %}">
-                                            <div class="text-truncate" style="max-width: 200px;" data-bs-toggle="tooltip" 
+                                            <div class="text-truncate" style="max-width: 300px;" data-bs-toggle="tooltip" 
                                                  title="{{ loan.stock_item.Title }}">
                                                 {{ loan.stock_item.Title }}
                                             </div>
@@ -85,7 +85,7 @@
                                         <form action="{% url 'check_in' %}" method="POST">
                                             {% csrf_token %}
                                             <input type="hidden" name="stock_id" value="{{ loan.stock_item.StockID }}">
-                                            <button type="submit" class="btn btn-sm btn-success">Check In</button>
+                                            <button type="submit" class="btn btn-sm btn-primary">Check In</button>
                                         </form>
                                     </td>
                                     <td>
@@ -129,7 +129,7 @@
                                     <tr>
                                         <td>
                                             <a href="{% url 'book_info' fine.loan_history.stock_item.BibNum %}">
-                                                <div class="text-truncate" style="max-width: 200px;" data-bs-toggle="tooltip" 
+                                                <div class="text-truncate" style="max-width: 300px;" data-bs-toggle="tooltip" 
                                                      title="{{ fine.loan_history.stock_item.Title }}">
                                                     {{ fine.loan_history.stock_item.Title }}
                                                 </div>
@@ -137,10 +137,16 @@
                                         </td>
                                         <td>{{ fine.date_issued|date:"d M Y" }}</td>
                                         <td>
-                                            {{ fine.amount }}                                               
+                                            £{{ fine.amount }}                                               
                                         </td>
                                     </tr>
                                     {% endfor %}
+                                    <br>
+                                    <tr>
+                                        <td>Total</td>
+                                        <td></td>
+                                        <td>£0.00</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
