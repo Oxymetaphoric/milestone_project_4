@@ -62,3 +62,14 @@ class LoanHistory(models.Model):
 
     class Meta:
         ordering = ['-check_out_date']
+
+class Fine(models.Model):
+    customer = models.ForeignKey(LibraryCustomer, on_delete=models.CASCADE, related_name='fines')
+    amount = models.DecimalField(max_digits=6, decimal_places=2)
+    date_issued = models.DateTimeField(auto_now_add=True)
+    loan_history = models.OneToOneField('LoanHistory', on_delete=models.CASCADE, related_name='fine')
+    is_paid = models.BooleanField(default=False)
+    date_paid = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Fine of £{self.amount} for {self.customer}"
