@@ -12,6 +12,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from decimal import Decimal
 from datetime import timedelta
 
+DAILY_RATE = Decimal('0.50')
+LOAN_PERIOD = 2
+
 # Create your views here.
 
 def display_catalogue_items(request):
@@ -112,7 +115,6 @@ def book_info(request, BibNum):
     return render(request, 'catalogue/item_details.html', context)
 
 def check_out(request):
-    LOAN_PERIOD = 2
     if request.method == 'POST':
         stock_id = request.POST.get('stock_id')
         user_id = request.POST.get('user_id')
@@ -154,6 +156,10 @@ def check_out(request):
 def check_in(request):
     if request.method == 'POST':
         stock_id = request.POST.get('stock_id')
+        fine_amount = 0
+        status = 'completed'
+        days_overdue = 0
+
         if stock_id:
             try:
                 stock_id = uuid.UUID(stock_id)
@@ -168,16 +174,11 @@ def check_in(request):
                 try:
                     current_loan = CurrentLoan.objects.get(stock_item=stock_item)
                     return_date = timezone.now()
-                    days_overdue=0
                     if return_date > current_loan.due_date:
                         delta = return_date - current_loan.due_date
                         days_overdue = delta.days
-
-                    status = 'completed'
-                    if days_overdue > 0:
                         status = 'overdue'
 
-                    # Create loan history entry
                     loan_history = LoanHistory.objects.create(
                         customer=current_loan.customer,
                         stock_item=stock_item,
@@ -185,15 +186,16 @@ def check_in(request):
                         return_date=return_date,
                         status=status
                     )
-                    if days_overdue > 0:
-                        DAILY_RATE = Decimal('0.50')
-                        fine_amount = Decimal(days_overdue)* DAILY_RATE
 
+                    if days_overdue > 0:
+                        fine_amount = Decimal(days_overdue) * DAILY_RATE
+                    # Create loan history entry
                         Fine.objects.create(
                                 customer=current_loan.customer,
                                 amunt=fine_amount,
                                 loan_history=loan_history
                                 )
+
                     # Delete the current loan entry
                     current_loan.delete()
                     
