@@ -1,4 +1,6 @@
-from django import forms
+from django import forms 
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Submit, Row, Column
 from .models import LibraryCustomer 
 
 class CustomerForm(forms.ModelForm):
@@ -28,6 +30,35 @@ class CustomerForm(forms.ModelForm):
             'date_of_birth': 'Date of Birth',
             'is_child': 'Is Child',
         }
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Column('first_name', css_class='form-group col-md-6 mb-0'),
+                Column('last_name', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('street_address1', css_class='form-group col-md-6 mb-0'),
+                Column('street_address2', css_class='form-group col-md-6 mb-0'),
+                css_class='form_row'
+                ),
+            Row(
+                Column('city_or_town', css_class='form-group col-md-6 mb-0'),
+                Column('postcode', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('email_address', css_class='form-group col-md-6 mb-0'),
+                Column('phone_number', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('date_of_birth', css_class='form-group col-md-6 mb-0'),
+                Column('is_child', css_class='form-group col-md-2 mb-0'),
+                css_class='form-row'
+            ),
+        )
 
         for field in self.fields:
             placeholder = placeholders.get(field, '')
