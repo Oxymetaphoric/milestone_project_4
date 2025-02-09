@@ -122,6 +122,7 @@
                                         <th>Title</th>
                                         <th>Date issued</th>
                                         <th>Amount</th>
+                                        <th>Pay fine</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -139,6 +140,15 @@
                                         <td>
                                             £{{ fine.amount }}                                               
                                         </td>
+                                        <td>
+                                            <div class="text-truncate" style="max-width: 300px;">
+                                                <form action="#" method="POST"> 
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="fine_id" value="{{ loan.fine_id }}">
+                                                    <button type="submit" class="btn btn-sm btn-primary">Pay fine</button>
+                                                </form>
+                                            </div>
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                     <br>
@@ -146,6 +156,15 @@
                                         <td>Total</td>
                                         <td></td>
                                         <td>£0.00</td>
+                                        <td>
+                                            <div class="text-truncate" style="max-width: 300px;">
+                                                <form action="#" method="POST"> 
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="fine_id" value="{{ loan.fine_id }}">
+                                                    <button type="submit" class="btn btn-sm btn-primary">Pay total</button>
+                                                </form>
+                                            </div>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
