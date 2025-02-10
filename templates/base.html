@@ -43,32 +43,29 @@
   </head>
   <body>
     <!-- Header container with two rows -->
-    <div class="row header-container" style="height: 150px;">
-        <div class="col-12 align-right branding-header">
-          <img style="padding: 10px;" class="" src="{% static 'images/logo.svg' %}" alt="corporate logo">
+    <div class="row header-container" style="height: 100px;">
+        <div class="col-12 d-flex justify-content-between align-items-center branding-header">
+            <!-- Logo on the left -->
+            <img style="padding: 10px;" src="{% static 'images/logo.svg' %}" alt="corporate logo">
+            
+            <!-- Logout button on the far right -->
+            {% if user.is_authenticated %}
+                <a href="{% url 'account_logout' %}" class="btn btn-sm btn-danger">Log out</a>
+            {% endif %}
         </div>
-        <div class="row location-header">
-          <!-- Second header row content -->
-          <div class="col-8 d-flex justify-content-left">
-            <div>
-        </div>
-      </div>
-    </div>
+        
+        <!-- Second header row content -->
+            </div>
 
     <!-- Main content area with navigation and content -->
     <div class="row main-content">
         <!-- Navigation sidebar -->
-       <div class="col-3 nav-sidebar" style="height: 100vh; width: fit-content; padding:0px;">
-          {% include 'includes/sidenav.html' %}
-      </div>
-
-        <!-- Main content area -->
-      {% block content %}
-      {% endblock %}
-    </div>
-
-    {% block postloadjs %}
-    {% endblock %}
+        <div class="col-3 nav-sidebar" style="height: 100vh; width: fit-content; padding:0px;">
+            {% include 'includes/sidenav.html' %}
+        </div>
+    </div>    
+{% block postloadjs %}
+{% endblock %}
   </body>
 </html>
 
