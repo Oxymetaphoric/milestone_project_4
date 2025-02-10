@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CLIO - Library Management System{% endblock %}</title>
+    <!-- Include your CSS files -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- Content block for the login/signup form -->
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    <!-- Include your JavaScript files -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
