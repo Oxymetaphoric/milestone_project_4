@@ -99,6 +99,8 @@ def edit_library_customer(request, user_id):
             customer=library_customer
             ).order_by('date_issued')
 
+    total_fines = fines.aggregate(total=Sum('amount'))['total']
+
     if request.method == 'POST':
         form = CustomerForm(request.POST, request.FILES, instance=library_customer)
         if form.is_valid():
@@ -114,6 +116,7 @@ def edit_library_customer(request, user_id):
         'user_id': user_id,
         'current_loans': current_loans,
         'fines': fines,
+        'total_fines': total_fines,
     }
 
     return render(request, template, context)
