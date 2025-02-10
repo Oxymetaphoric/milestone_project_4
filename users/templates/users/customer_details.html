@@ -137,7 +137,7 @@
                                             </a>
                                         </td>
                                         <td>{{ fine.date_issued|date:"d M Y" }}</td>
-                                        <td>
+                                       <td>
                                             £{{ fine.amount }}                                               
                                         </td>
                                         <td>
@@ -155,7 +155,7 @@
                                     <tr>
                                         <td>Total</td>
                                         <td></td>
-                                        <td>£0.00</td>
+                                        <td>£{{total_fines}}</td>
                                         <td>
                                             <div class="text-truncate" style="max-width: 300px;">
                                                 <form action="#" method="POST"> 

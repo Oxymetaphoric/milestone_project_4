@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, reverse, redirect
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.http import JsonResponse
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -34,12 +34,18 @@ def display_customer_details(request, user_id):
     A view to display and edit customer details.
     """
     library_customer = get_object_or_404(LibraryCustomer, user_id=user_id)
+    
     current_loans = CurrentLoan.objects.filter(
             customer=user_id
             ).order_by('due_date')
+
     fines = Fine.objects.filter(
             customer=library_customer
             ).order_by('date_issued')
+
+    total_fines = fines.aggregate(total=Sum('amount'))['total']
+
+    total_fines = total_fines or 0
 
     if request.method == 'POST':
         form = CustomerForm(request.POST, instance=library_customer)
@@ -57,6 +63,7 @@ def display_customer_details(request, user_id):
         'form': form,
         'user_id': user_id,
         'fines': fines,
+        'total_fines': total_fines,
     }
 
     return render(request, 'users/customer_details.html', context)
