@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from .models import CatalogueItem, StockItem 
 from users.models import LibraryCustomer, CurrentLoan, LoanHistory, Fine 
+from django.contrib.auth.decorators import login_required
 from .forms import StockForm
 import uuid
 from django.core.exceptions import ObjectDoesNotExist
@@ -17,7 +18,7 @@ LOST_ITEM = Decimal('10.00')
 LOAN_PERIOD = 2
 
 # Create your views here.
-
+@login_required
 def display_catalogue_items(request):
 
     """
@@ -29,6 +30,7 @@ def display_catalogue_items(request):
             }
     return render(request, 'catalogue/catalogue.html', context)
 
+@login_required
 def display_stock_items(request):
     stock_item=StockItem.objects.all()
     context = {
@@ -36,6 +38,7 @@ def display_stock_items(request):
             }
     return render(request, 'catalogue/item_details.html', context)
 
+@login_required
 def search_catalogue(request):
     query = request.GET.get('q', '')
     results = []
@@ -66,6 +69,7 @@ def search_catalogue(request):
     
     return JsonResponse(results, safe=False)
 
+@login_required
 def book_info(request, BibNum): 
     catalogue_item = get_object_or_404(CatalogueItem, pk=BibNum)
     stock_items = catalogue_item.stock_items.all()
@@ -115,6 +119,7 @@ def book_info(request, BibNum):
         }
     return render(request, 'catalogue/item_details.html', context)
 
+@login_required
 def check_out(request):
     if request.method == 'POST':
         stock_id = request.POST.get('stock_id')
@@ -154,6 +159,7 @@ def check_out(request):
                 
     return render(request, 'catalogue/check_out.html')
 
+@login_required
 def check_in(request):
     if request.method == 'POST':
         stock_id = request.POST.get('stock_id')
@@ -221,6 +227,7 @@ def check_in(request):
             messages.error(request, 'Please enter a Stock ID')
     return render(request, 'catalogue/check_in.html')
 
+@login_required
 def lost_item(request):
     if request.method == 'POST':
         stock_id = request.POST.get('stock_id')

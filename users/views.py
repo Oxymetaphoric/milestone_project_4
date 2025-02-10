@@ -5,13 +5,15 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from users.models import LibraryCustomer, CurrentLoan, LoanHistory, Fine 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
 
 from .forms import CustomerForm
 
+@login_required
 def find_users(request):
     return render(request, 'users/users_home.html' )
 
-
+@login_required
 def search_users(request):
     query = request.GET.get('q', '')
     results = []
@@ -29,6 +31,7 @@ def search_users(request):
 
     return JsonResponse(results, safe=False)
 
+@login_required
 def display_customer_details(request, user_id):
     """
     A view to display and edit customer details.
@@ -68,6 +71,7 @@ def display_customer_details(request, user_id):
 
     return render(request, 'users/customer_details.html', context)
 
+@login_required
 def add_library_customer(request):
     if request.method == 'POST':
         form = CustomerForm(request.POST, request.FILES)
@@ -83,6 +87,7 @@ def add_library_customer(request):
     }
     return render(request, template, context)
 
+@login_required
 def edit_library_customer(request, user_id):
     library_customer = get_object_or_404(LibraryCustomer, pk=user_id)
     user_id=user_id
@@ -113,6 +118,7 @@ def edit_library_customer(request, user_id):
 
     return render(request, template, context)
 
+@login_required
 def customer_loan_history(request, user_id):
         customer = get_object_or_404(LibraryCustomer, user_id=user_id)
         
@@ -135,6 +141,7 @@ def customer_loan_history(request, user_id):
         }
         return render(request, 'users/loan_history.html', context)
 
+@login_required
 def delete_library_customer(request, user_id):
     library_customer = get_object_or_404(LibraryCustomer, pk=user_id)
     library_customer.delete()
