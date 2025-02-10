@@ -63,7 +63,9 @@
         <div class="col-3 nav-sidebar" style="height: 100vh; width: fit-content; padding:0px;">
             {% include 'includes/sidenav.html' %}
         </div>
-    </div>    
+    {% block content %}
+    {% endblock %}
+    </div>   
 {% block postloadjs %}
 {% endblock %}
   </body>
