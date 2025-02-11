@@ -103,3 +103,44 @@ class Fine(models.Model):
 
     def __str__(self):
         return f"Fine of £{self.amount} for {self.customer}"
+
+class Payment(models.Model):
+    PAYMENT_STATUS = [
+        ('PENDING', 'Pending'),
+        ('PROCESSING', 'Processing'),
+        ('COMPLETED', 'Completed'),
+        ('FAILED', 'Failed'),
+        ('REFUNDED', 'Refunded'),
+    ]
+
+    payment_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    fine = models.ForeignKey(Fine, on_delete=models.CASCADE, related_name='payments')
+    stripe_payment_id = models.CharField(max_length=100)
+    status = models.CharField(max_length=100)  # You might want to use choices here
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    @property
+    def amount(self):
+        return self.fine.amount
+    
+    def __str__(self):
+        return f"Payment {self.payment_id} for Fine {self.fine.fine_id}"
+
+class PaymentHistory(models.Model):
+    history_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, related_name='history')
+    status_before = models.CharField(max_length=100)
+    status_after = models.CharField(max_length=100)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    notes = models.TextField(blank=True, null=True)
+    
+    class Meta:
+        verbose_name_plural = "Payment histories"
+        ordering = ['-timestamp']
+    
+    def __str__(self):
+        return f"History for Payment {self.payment.payment_id}"
+
+
+
+
