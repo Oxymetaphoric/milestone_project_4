@@ -3,11 +3,13 @@ from django.db.models import Q, Sum
 from django.http import JsonResponse
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from users.models import LibraryCustomer, CurrentLoan, LoanHistory, Fine 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
-
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+from users.models import LibraryCustomer, CurrentLoan, LoanHistory, Fine, Payment 
 from .forms import CustomerForm
+import stripe
 
 @login_required
 def find_users(request):
@@ -150,3 +152,30 @@ def delete_library_customer(request, user_id):
     library_customer.delete()
     
     return redirect(reverse('find_users'))
+
+
+@login_required
+def payment_page(request, fine_id):
+    fine = get_object_or_404(Fine, fine_id=fine_id)
+    context = {
+        'fine': fine,
+        'stripe_public_key': settings.STRIPE_PUBLISHABLE_KEY
+    }
+    return render(request, 'payments/payment.html', context)
+
+@csrf_exempt
+def create_payment_intent(request, fine_id):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    fine = get_object_or_404(Fine, fine_id=fine_id)
+    
+    try:
+        intent = stripe.PaymentIntent.create(
+            amount=int(fine.amount * 100),
+            currency='gbp',
+            metadata={'fine_id': str(fine.fine_id)}
+        )
+        return JsonResponse({
+            'clientSecret': intent.client_secret
+        })
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
