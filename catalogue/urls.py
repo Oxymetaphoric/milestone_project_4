@@ -10,8 +10,5 @@ urlpatterns = [
     path('check_out/', views.check_out, name='check_out'),
     path('lost_item/', views.lost_item, name='lost_item'),
     path('display_customer_details/<uuid:user_id>/', user_views.display_customer_details, name='display_customer_details'),
-    path('pay/<uuid:fine_id>/', views.payment_page, name='payment_page'),
-    path('create-payment-intent/<uuid:fine_id>/', views.create_payment_intent, name='create_payment_intent'),
-    path('webhook/', views.stripe_webhook, name='stripe_webhook'),
 ]
-]
+
