@@ -116,7 +116,7 @@ class Payment(models.Model):
     payment_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     fine = models.ForeignKey(Fine, on_delete=models.CASCADE, related_name='payments')
     stripe_payment_id = models.CharField(max_length=100)
-    status = models.CharField(max_length=100)  # You might want to use choices here
+    status = models.CharField(max_length=100, choices=PAYMENT_STATUS, default='PENDING')
     created_at = models.DateTimeField(auto_now_add=True)
     
     @property
