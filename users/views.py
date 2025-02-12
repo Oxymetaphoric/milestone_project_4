@@ -161,7 +161,7 @@ def payment_page(request, fine_id):
         'fine': fine,
         'stripe_public_key': settings.STRIPE_PUBLISHABLE_KEY
     }
-    return render(request, 'payments/payment.html', context)
+    return render(request, 'users/payment.html', context)
 
 @csrf_exempt
 def create_payment_intent(request, fine_id):
