@@ -85,7 +85,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Payment successful
-            window.location.href = '{% url "home" %}';
+            window.location.href = '{% url "payment_success" fine.fine_id %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+            }
             
         } catch (error) {
             const errorDiv = document.getElementById('card-errors');

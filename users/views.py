@@ -182,6 +182,17 @@ def create_payment_intent(request, fine_id):
             return JsonResponse({'error': str(e)}, status=400)
 
 @login_required
+def payment_success(request, fine_id):
+    if request.method == 'POST':
+        fine = get_object_or_404(Fine, fine_id=fine_id)
+        customer = fine.customer  # Assuming `customer` is a ForeignKey in the Fine model
+        payment_successful = customer.pay_fine(fine_id)
+        if payment_successful:
+            return render(request, 'users/payment_success.html', {'fine': fine})
+        else:
+            return render(request, 'users/payment_error.html', {'message': 'Fine already paid or not found'})
+
+@login_required
 def customer_fine_history(request, user_id):
         customer = get_object_or_404(LibraryCustomer, user_id=user_id)
 

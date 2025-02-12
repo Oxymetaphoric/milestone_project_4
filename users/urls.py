@@ -16,5 +16,6 @@ urlpatterns = [
     re_path(r'^(?P<user_id>[A-Za-z0-9]+)/$', views.display_customer_details, name='display_customer_details'),
     path('pay/<uuid:fine_id>/', views.payment_page, name='payment_page'),
     path('create-payment-intent/<uuid:fine_id>/', views.create_payment_intent, name='create_payment_intent'),
+    path('payment_success/<uuid:fine_id>/', views.payment_success, name='payment_success'),
     path('webhook/', stripe_webhook, name='stripe_webhook'),
 ] 
