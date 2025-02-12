@@ -60,7 +60,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         try {
             // Create PaymentIntent
-          const response = await fetch("{% url 'create_payment_intent' fine.fine_id %}"); 
+          const response = await fetch("{% url 'create_payment_intent' fine.fine_id %}", {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': '{{ csrf_token }}',
+              },
+            }); 
           const data = await response.json();
             
             if (data.error) {

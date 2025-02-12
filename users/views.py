@@ -163,22 +163,22 @@ def payment_page(request, fine_id):
     }
     return render(request, 'users/payment.html', context)
 
-@csrf_exempt
 def create_payment_intent(request, fine_id):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    fine = get_object_or_404(Fine, fine_id=fine_id)
-    
-    try:
-        intent = stripe.PaymentIntent.create(
-            amount=int(fine.amount * 100),
-            currency='gbp',
-            metadata={'fine_id': str(fine.fine_id)}
-        )
-        return JsonResponse({
-            'clientSecret': intent.client_secret
-        })
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=400)
+    if request.method=='POST':
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        fine = get_object_or_404(Fine, fine_id=fine_id)
+        
+        try:
+            intent = stripe.PaymentIntent.create(
+                amount=int(fine.amount * 100),
+                currency='gbp',
+                metadata={'fine_id': str(fine.fine_id)}
+            )
+            return JsonResponse({
+                'clientSecret': intent.client_secret
+            })
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
 
 @login_required
 def customer_fine_history(request, user_id):
