@@ -163,6 +163,7 @@ def payment_page(request, fine_id):
     }
     return render(request, 'users/payment.html', context)
 
+@login_required
 def create_payment_intent(request, fine_id):
     if request.method=='POST':
         stripe.api_key = settings.STRIPE_SECRET_KEY
