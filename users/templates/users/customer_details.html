@@ -112,6 +112,10 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Fines</h4>
+                    <a href="{% url 'customer_fine_history' user_id %}" class="btn btn-outline-primary btn-sm">
+                        View Full History
+                    </a>
+
                 </div>
                 <div class="card-body">
                     {% if fines %}
@@ -144,11 +148,9 @@
                                             <div class="text-truncate" style="max-width: 300px;">
                                                 <a href="{% url 'payment_page' fine_id=fine.fine_id %}" class="btn btn-sm btn-primary">Pay fine</a>
                                             </div>
-
-                                            </div>
                                         </td>
                                     </tr>
-                                    {% endfor %}
+                                      {% endfor %}
                                     <br>
                                     <tr>
                                         <td>Total</td>
