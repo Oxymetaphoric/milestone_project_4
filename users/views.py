@@ -179,3 +179,27 @@ def create_payment_intent(request, fine_id):
         })
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
+
+@login_required
+def customer_fine_history(request, user_id):
+        customer = get_object_or_404(LibraryCustomer, user_id=user_id)
+
+        fine_history_list = Fine.objects.filter(customer=customer).order_by('date_issued')  # Changed from loan_date
+        
+        paginator = Paginator(fine_history_list, 10)
+        page = request.GET.get('page')
+        
+        try:
+            fine_history = paginator.page(page)
+        except PageNotAnInteger:
+            fine_history = paginator.page(1)
+        except EmptyPage:
+            fine_history = paginator.page(paginator.num_pages)
+        
+        context = {
+            'customer': customer,
+            'fine_history': fine_history,
+            'user_id': user_id,
+        }
+        return render(request, 'users/fine_history.html', context)
+
