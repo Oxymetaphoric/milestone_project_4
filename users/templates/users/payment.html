@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Pay Fine</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h5>Fine Details:</h5>
+                        <p>Amount: £{{ fine.amount }}</p>
+                        <p>Date Issued: {{ fine.date_issued|date:"F d, Y" }}</p>
+                    </div>
+                    
+                    <form id="payment-form">
+                        <div id="card-element" class="mb-3">
+                            <!-- Stripe Elements will insert the card input here -->
+                        </div>
+                        
+                        <div id="card-errors" class="alert alert-danger d-none" role="alert"></div>
+                        
+                        <button id="submit-button" class="btn btn-primary btn-block">
+                            <span id="button-text">Pay Now</span>
+                            <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
