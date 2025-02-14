@@ -5,6 +5,8 @@ from django.views.decorators.http import require_POST
 from django.conf import settings
 from users.models import Fine, Payment 
 
+STRIPE_API_KEY=settings.STRIPE_SECRET_KEY
+
 @require_POST
 @csrf_exempt
 def stripe_webhook(request):
