@@ -17,5 +17,5 @@ urlpatterns = [
     path('pay/<uuid:fine_id>/', views.payment_page, name='payment_page'),
     path('create-payment-intent/<uuid:fine_id>/', views.create_payment_intent, name='create_payment_intent'),
     path('payment_success/<uuid:fine_id>/', views.payment_success, name='payment_success'),
-    path('webhook/', stripe_webhook, name='stripe_webhook'),
+    path('stripe_webhook/', stripe_webhook, name='stripe_webhook'),
 ] 
