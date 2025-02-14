@@ -33,7 +33,7 @@ DEBUG = 'development' in os.environ
 ALLOWED_HOSTS = ['library-management-lms-c0ccc240f065.herokuapp.com', 'localhost']
 
 STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
-STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
 STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
 
 # Application definition
