@@ -184,7 +184,7 @@ def create_payment_intent(request, fine_id):
             client_secret = intent.client_secret
             client_secret_string = str(client_secret)
             return JsonResponse({
-                'client_secret': client_secret_string
+                'clientSecret': client_secret_string
             })
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
