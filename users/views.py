@@ -183,6 +183,7 @@ def create_payment_intent(request, fine_id):
             
             # Log the entire intent object for debugging
             print(intent.client_secret)
+            print(intent.metadata)
             client_secret = intent.client_secret
             client_secret_string = str(client_secret)
             return JsonResponse({
@@ -276,13 +277,15 @@ class StripeWH_Handler:
         return HttpResponse(status=200)
 
     def handle_payment_intent_succeeded(self, event):
+        print("reached handle_payment_intent_succeeded handler")
         self.logger.info("Payment intent succeeded")
         payment_intent = event['data']['object']
         
         # Get metadata
         fine_id = payment_intent.get('metadata', {}).get('fine_id')
         user_id = payment_intent.get('metadata', {}).get('user_id')
-        
+        print(fine_id)
+        print(user_id)
         self.logger.info(f"Fine ID: {fine_id}, User ID: {user_id}")
         
         if not fine_id or not user_id:
