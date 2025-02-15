@@ -216,7 +216,6 @@ def process_payment_success(fine_id):
 @login_required
 def payment_success(request, fine_id):
     result = process_payment_success(fine_id)
-    print("returned from process_payment_request:", result)
     
     if result['status'] == 'success':
         fine = get_object_or_404(Fine, fine_id=fine_id)
@@ -227,7 +226,8 @@ def payment_success(request, fine_id):
         # Call the reusable method from StripeWH_Handler
         stripe_handler = StripeWH_Handler(request)
         stripe_handler.process_payment_success(fine_id)
-        
+        print("running payment_success")
+
         return render(request, 'users/payment_success.html', {
             'fine': result['fine'],
             'date_paid': result.get('payment_date'),  # Changed key to match
@@ -299,6 +299,7 @@ class StripeWH_Handler:
         """
         Reusable method to process payment success for a given fine_id
         """
+        print("running process_payment_success")
         result = process_payment_success(fine_id)
         self.logger.info(f"Result from process_payment_success: {result}")
         
