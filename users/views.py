@@ -202,8 +202,8 @@ def process_payment_success(fine_id):
         return {
                 'status': 'success',
                 'fine': fine,
-                'payment_date': fine.date_paid,
-                'amount_paid': fine.amount
+                'date_paid': fine.date_paid,
+                'amount': fine.amount
             }
         
     except Exception as e:
@@ -220,8 +220,8 @@ def payment_success(request, fine_id):
     if result['status'] == 'success':
         return render(request, 'users/payment_success.html', {
             'fine': result['fine'],
-            'payment_date': result['date_paid'],
-            'amount_paid': result['amount']
+            'date_paid': result.get('payment_date'),  # Changed key to match
+            'amount': result.get('amount_paid')  # Changed key to match
         })
     else:
         return render(request, 'users/payment_error.html', {
