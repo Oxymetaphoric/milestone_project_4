@@ -180,7 +180,7 @@ def create_payment_intent(request, fine_id):
             )
             
             # Log the entire intent object for debugging
-            print("PaymentIntent created:", intent)
+            print(intent.client_secret)
             
             return JsonResponse({
                 'client_secret': intent.client_secret
