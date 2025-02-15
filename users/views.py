@@ -217,7 +217,17 @@ def process_payment_success(fine_id):
 def payment_success(request, fine_id):
     result = process_payment_success(fine_id)
     print("returned from process_payment_request:", result)
+    
     if result['status'] == 'success':
+        fine = get_object_or_404(Fine, fine_id=fine_id)
+        customer = get_object_or_404(LibraryCustomer, user_id=fine.customer.user_id)
+        print(fine)
+        print(customer)
+        
+        # Call the reusable method from StripeWH_Handler
+        stripe_handler = StripeWH_Handler(request)
+        stripe_handler.process_payment_success(fine_id)
+        
         return render(request, 'users/payment_success.html', {
             'fine': result['fine'],
             'date_paid': result.get('payment_date'),  # Changed key to match
@@ -255,7 +265,6 @@ class StripeWH_Handler:
     """Handle Stripe webhooks"""
 
     def __init__(self, request):
-        """Overwrite init with logger setting"""
         self.request = request
         self.logger = logging.getLogger('stripe_webhook')
 
@@ -267,6 +276,9 @@ class StripeWH_Handler:
         return HttpResponse(status=200)
 
     def handle_payment_intent_succeeded(self, event):
+        """
+        Handle the payment_intent.succeeded webhook event
+        """
         self.logger.info("Payment intent succeeded")
         payment_intent = event['data']['object']
         fine_id = payment_intent.get('metadata', {}).get('fine_id')
@@ -275,19 +287,24 @@ class StripeWH_Handler:
             self.logger.error("No fine_id found in payment_intent metadata")
             return HttpResponse(status=400)
         
-        # Process the payment success
+        # Call the reusable method
+        self.process_payment_success(fine_id)
+        return HttpResponse(status=200)
+
+    def process_payment_success(self, fine_id):
+        """
+        Reusable method to process payment success for a given fine_id
+        """
         result = process_payment_success(fine_id)
         self.logger.info(f"Result from process_payment_success: {result}")
         
         if result['status'] == 'success':
             self.logger.info(f"Payment processed successfully for fine_id: {fine_id}")
-            # You can perform additional actions here, such as sending an email or updating the database
+            # Perform additional actions (e.g., send email, update database)
         elif result['status'] == 'processing':
             self.logger.info(f"Payment is being processed for fine_id: {fine_id}")
         else:
             self.logger.error(f"Error processing payment for fine_id: {fine_id} - {result['message']}")
-        
-        return HttpResponse(status=200)
     
     def handle_payment_intent_payment_failed(self, event):
         """
