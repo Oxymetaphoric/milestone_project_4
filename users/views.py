@@ -196,19 +196,19 @@ def process_payment_success(fine_id):
     try:
         fine = get_object_or_404(Fine, fine_id=fine_id)
         print (fine)
-        # if fine.is_paid and fine.payment_id:
-        return {
-            'status': 'success',
-            'fine': fine,
-            'payment_date': fine.payment_date,
-            'amount_paid': fine.amount
-        }
-        # else:
-        #     return {
-        #         'status': 'processing',
-        #         'fine': fine,
-        #         'message': 'Payment is being processed. Please wait a moment...'
-        #     }
+        if fine.is_paid and fine.payment_id:
+            return {
+                'status': 'success',
+                'fine': fine,
+                'payment_date': fine.payment_date,
+                'amount_paid': fine.amount
+            }
+        else:
+            return {
+                'status': 'processing',
+                'fine': fine,
+                'message': 'Payment is being processed. Please wait a moment...'
+            }
     except Exception as e:
         print(f"Error in process_payment_success: {str(e)}")
         return {
