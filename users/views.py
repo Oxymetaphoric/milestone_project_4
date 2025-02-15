@@ -278,9 +278,9 @@ class StripeWH_Handler:
         print(payment_intent)
         fine_id = payment_intent.get('metadata', {}).get('id')
         print(fine_id)
-        if not fine_id:
-            self.logger.error("No fine_id found in payment_intent metadata")
-            return HttpResponse(status=400)
+        # if not fine_id:
+        #     self.logger.error("No fine_id found in payment_intent metadata")
+        #     return HttpResponse(status=400)
     
         result = process_payment_success(fine_id)
     
