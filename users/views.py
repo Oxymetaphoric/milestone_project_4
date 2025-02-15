@@ -1,15 +1,18 @@
+from django.contrib.auth import views
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.db.models import Q, Sum
-from django.http import JsonResponse
-from django.contrib import messages
+from django.http import JsonResponse, HttpResponse
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
-from users.models import LibraryCustomer, CurrentLoan, LoanHistory, Fine, Payment 
 from .forms import CustomerForm
 import stripe
+import logging
+
+from .models import LibraryCustomer, CurrentLoan, LoanHistory, Fine 
+
+logger = logging.getLogger(__name__)
 
 @login_required
 def find_users(request):
@@ -165,33 +168,68 @@ def payment_page(request, fine_id):
 
 @login_required
 def create_payment_intent(request, fine_id):
-    if request.method=='POST':
+    if request.method == 'POST':
         stripe.api_key = settings.STRIPE_SECRET_KEY
         fine = get_object_or_404(Fine, fine_id=fine_id)
-        
+        print("creating intent")
         try:
             intent = stripe.PaymentIntent.create(
                 amount=int(fine.amount * 100),
                 currency='gbp',
-                metadata={'fine_id': str(fine.fine_id)}
+                metadata={'fine_id': str(fine_id)}  # Ensure fine_id is a string
             )
+            
+            # Log the entire intent object for debugging
+            print("PaymentIntent created:", intent)
+            
             return JsonResponse({
-                'clientSecret': intent.client_secret
+                'client_secret': intent.client_secret
             })
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
+# views.py
+def process_payment_success(fine_id):
+    """
+    Process a successful payment for a given fine_id.
+    """
+    try:
+        fine = get_object_or_404(Fine, fine_id=fine_id)
+        
+        if fine.is_paid and fine.payment_id:
+            return {
+                'status': 'success',
+                'fine': fine,
+                'payment_date': fine.payment_date,
+                'amount_paid': fine.amount
+            }
+        else:
+            return {
+                'status': 'processing',
+                'fine': fine,
+                'message': 'Payment is being processed. Please wait a moment...'
+            }
+    except Exception as e:
+        print(f"Error in process_payment_success: {str(e)}")
+        return {
+            'status': 'error',
+            'message': 'An error occurred while processing your payment'
+        }
+
 @login_required
 def payment_success(request, fine_id):
-        try:
-            fine = get_object_or_404(Fine, fine_id=fine_id)
-            if fine.is_paid:
-                return render(request, 'users/payment_success.html', {'fine': fine})
-            else:
-                return render(request, 'users/payment_error.html', {'message': 'Payment not confirmed'})
-        except Exception as e:
-            print(f"Error in payment_success: {str(e)}")
-            raise  
+    result = process_payment_success(fine_id)
+    
+    if result['status'] == 'success':
+        return render(request, 'users/payment_success.html', {
+            'fine': result['fine'],
+            'payment_date': result['payment_date'],
+            'amount_paid': result['amount_paid']
+        })
+    else:
+        return render(request, 'users/payment_error.html', {
+            'message': result['message']
+        })
 
 @login_required
 def customer_fine_history(request, user_id):
@@ -216,3 +254,49 @@ def customer_fine_history(request, user_id):
         }
         return render(request, 'users/fine_history.html', context)
 
+class StripeWH_Handler:
+    """Handle Stripe webhooks"""
+
+    def __init__(self, request):
+        """Overwrite init with logger setting"""
+        self.request = request
+        self.logger = logging.getLogger('stripe_webhook')
+
+    def handle_event(self, event):
+        """
+        Handle a generic/unknown webhook event
+        """
+        self.logger.info(f"Unhandled webhook event: {event['type']}")
+        return HttpResponse(status=200)
+
+    def handle_payment_intent_succeeded(self, event):
+        """
+        Handle the payment_intent.succeeded webhook event
+        """
+        self.logger.info("Payment intent succeeded")
+        payment_intent = event['data']['object']
+        print(payment_intent)
+        fine_id = payment_intent.get('metadata', {}).get('id')
+        print(fine_id)
+        if not fine_id:
+            self.logger.error("No fine_id found in payment_intent metadata")
+            return HttpResponse(status=400)
+    
+        result = process_payment_success(fine_id)
+    
+        if result['status'] == 'success':
+            self.logger.info(f"Payment processed successfully for fine_id: {fine_id}")
+        elif result['status'] == 'processing':
+            self.logger.info(f"Payment is being processed for fine_id: {fine_id}")
+        else:
+            self.logger.error(f"Error processing payment for fine_id: {fine_id} - {result['message']}")
+        
+        return HttpResponse(status=200)
+
+    def handle_payment_intent_payment_failed(self, event):
+        """
+        Handle the payment_intent.payment_failed webhook event
+        """
+        self.logger.info("Payment intent failed")
+        # Add your logic here
+        return HttpResponse(status=200)

@@ -36,7 +36,7 @@
             <thead class="table-light">
                 <tr>
                     <th>Title</th>
-                    <th>Stock ID</th>
+                    <th>Fine ID</th>
                     <th>Check Out Date</th>
                     <th>Return Date</th>
                     <th>Status</th>
@@ -51,7 +51,7 @@
                             {{ fine.loan_history.stock_item.Title }}
                         </div>
                     </td>
-                    <td>{{ fine.loan_history.stock_item.StockID }}</td>
+                    <td>{{ fine.fine_id }}</td>
                     <td>{{ fine.loan_history.check_out_date|date:"d M Y" }}</td>
                     <td>{{ fine.loan_history.return_date|date:"d M Y" }}</td>
                     <td>

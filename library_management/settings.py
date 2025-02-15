@@ -32,9 +32,13 @@ DEBUG = 'development' in os.environ
 
 ALLOWED_HOSTS = ['library-management-lms-c0ccc240f065.herokuapp.com', 'localhost']
 
-STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
-STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
-STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
+# Stripe settings
+STRIPE_LIVE_MODE=False
+DJSTRIPE_WEBHOOK_SECRET=os.getenv("DJSTRIPE_WEBHOOK_SECRET", '')
+DJSTRIPE_USE_NATIVE_JSONFIELD=True
+DJSTRIPE_FOREIGN_KEY_TO_FIELD="id"
+# STRIPE_PUBLISHABLE_KEY=os.getenv("STRIPE_PUBLISHABLE_KEY", '')
+STRIPE_SECRET_KEY=os.getenv("STRIPE_TEST_SECRET_KEY", '')
 
 # Application definition
 
@@ -68,6 +72,30 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'library_management.urls'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'djstripe': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'users': {  # replace with your app name
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
 
 TEMPLATES = [
     {
