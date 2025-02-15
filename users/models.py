@@ -42,11 +42,15 @@ class LibraryCustomer(models.Model):
                 total=models.Sum('amount')['total'] or Decimal('0.00'))
 
     def pay_fine(self, fine_id):
+        print("paying fine...")
         try:
             fine = self.fines.get(fine_id=fine_id, is_paid=False)
+            print("fine is:", fine)
             fine.is_paid = True
+            print("is paid: ", fine.is_paid)
             fine.date_paid = timezone.now()
             fine.save()
+            print("saved fine: ", fine)
             return True
         except Fine.DoesNotExist:
             return False
