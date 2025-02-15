@@ -202,7 +202,7 @@ def process_payment_success(fine_id):
         return {
                 'status': 'success',
                 'fine': fine,
-                'payment_date': fine.payment_date,
+                'payment_date': fine.date_paid,
                 'amount_paid': fine.amount
             }
         
