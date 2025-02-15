@@ -181,8 +181,10 @@ def create_payment_intent(request, fine_id):
             
             # Log the entire intent object for debugging
             print(intent.client_secret)
-            
-            return intent.client_secret
+            client_secret = str(intent.client_secret)
+            return JsonResponse({
+                'client_secret': client_secret
+            })
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
