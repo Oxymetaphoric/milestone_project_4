@@ -276,9 +276,6 @@ class StripeWH_Handler:
         return HttpResponse(status=200)
 
     def handle_payment_intent_succeeded(self, event):
-        """
-        Handle the payment_intent.succeeded webhook event
-        """
         self.logger.info("Payment intent succeeded")
         payment_intent = event['data']['object']
         fine_id = payment_intent.get('metadata', {}).get('fine_id')
@@ -287,9 +284,16 @@ class StripeWH_Handler:
             self.logger.error("No fine_id found in payment_intent metadata")
             return HttpResponse(status=400)
         
-        # Call the reusable method
-        self.process_payment_success(fine_id)
-        return HttpResponse(status=200)
+        try:
+            fine = Fine.objects.get(fine_id=fine_id)
+            customer = fine.customer
+            customer.pay_fine(fine_id)
+            
+            self.logger.info(f"Payment processed successfully for fine_id: {fine_id}")
+            return HttpResponse(status=200)
+        except Exception as e:
+            self.logger.error(f"Error processing payment for fine_id: {fine_id} - {str(e)}")
+            return HttpResponse(status=500)
 
     def process_payment_success(self, fine_id):
         """
