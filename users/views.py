@@ -164,6 +164,7 @@ def payment_page(request, fine_id):
         'fine': fine,
         'stripe_public_key': settings.STRIPE_PUBLISHABLE_KEY
     }
+    print("payment page")
     return render(request, 'users/payment.html', context)
 
 @login_required
@@ -195,20 +196,20 @@ def process_payment_success(fine_id):
     """
     try:
         fine = get_object_or_404(Fine, fine_id=fine_id)
-        
-        if fine.is_paid and fine.payment_id:
-            return {
-                'status': 'success',
-                'fine': fine,
-                'payment_date': fine.payment_date,
-                'amount_paid': fine.amount
-            }
-        else:
-            return {
-                'status': 'processing',
-                'fine': fine,
-                'message': 'Payment is being processed. Please wait a moment...'
-            }
+        print (fine)
+        # if fine.is_paid and fine.payment_id:
+        return {
+            'status': 'success',
+            'fine': fine,
+            'payment_date': fine.payment_date,
+            'amount_paid': fine.amount
+        }
+        # else:
+        #     return {
+        #         'status': 'processing',
+        #         'fine': fine,
+        #         'message': 'Payment is being processed. Please wait a moment...'
+        #     }
     except Exception as e:
         print(f"Error in process_payment_success: {str(e)}")
         return {
@@ -276,7 +277,7 @@ class StripeWH_Handler:
         self.logger.info("Payment intent succeeded")
         payment_intent = event['data']['object']
         print(payment_intent)
-        fine_id = payment_intent.get('metadata', {}).get('id')
+        fine_id = payment_intent.get('metadata', {}).get('fine_id')
         print(fine_id)
         # if not fine_id:
         #     self.logger.error("No fine_id found in payment_intent metadata")
