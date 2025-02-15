@@ -176,7 +176,9 @@ def create_payment_intent(request, fine_id):
             intent = stripe.PaymentIntent.create(
                 amount=int(fine.amount * 100),
                 currency='gbp',
-                metadata={'fine_id': str(fine_id)}  # Ensure fine_id is a string
+                metadata={'fine_id': str(fine_id),
+                          'user_id': str(fine.customer.user_id),
+                          }  # Ensure fine_id is a string
             )
             
             # Log the entire intent object for debugging
@@ -274,20 +276,37 @@ class StripeWH_Handler:
         return HttpResponse(status=200)
 
     def handle_payment_intent_succeeded(self, event):
-        """
-        Handle the payment_intent.succeeded webhook event
-        """
         self.logger.info("Payment intent succeeded")
         payment_intent = event['data']['object']
-        print(payment_intent)
+        
+        # Get metadata
         fine_id = payment_intent.get('metadata', {}).get('fine_id')
-        print(fine_id)
-        if not fine_id:
-            print("No fine_id found in payment_intent metadata")
-       #     return HttpResponse(status=400)
-    
+        user_id = payment_intent.get('metadata', {}).get('user_id')
+        
+        self.logger.info(f"Fine ID: {fine_id}, User ID: {user_id}")
+        
+        if not fine_id or not user_id:
+            print(f"Missing fine_id or user_id in payment intent metadata. fine_id: {fine_id}, user_id: {user_id}")
+            return HttpResponse(status=200)  # Still return 200 to acknowledge receipt
+        
+        try:
+            # Import your LibraryCustomer model
+            from .models import LibraryCustomer
+            
+            # Get customer and pay the fine
+            customer = LibraryCustomer.objects.get(id=user_id)
+            success = customer.pay_fine(fine_id)
+            
+            if success:
+                self.logger.info(f"Successfully marked fine {fine_id} as paid for user {user_id}")
+            else:
+                self.logger.warning(f"Failed to mark fine {fine_id} as paid for user {user_id} - fine may not exist or is already paid")
+        except Exception as e:
+            self.logger.error(f"Error updating fine {fine_id}: {str(e)}")
+        
+        # Still call process_payment_success for any additional logic it handles
         result = process_payment_success(fine_id)
-    
+        
         if result['status'] == 'success':
             self.logger.info(f"Payment processed successfully for fine_id: {fine_id}")
         elif result['status'] == 'processing':
