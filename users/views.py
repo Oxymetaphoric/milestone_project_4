@@ -223,7 +223,7 @@ def process_payment_success(fine_id):
 @login_required
 def payment_success(request, fine_id):
     result = process_payment_success(fine_id)
-    
+    print("returned from process_payment_request:", result)
     if result['status'] == 'success':
         return render(request, 'users/payment_success.html', {
             'fine': result['fine'],
