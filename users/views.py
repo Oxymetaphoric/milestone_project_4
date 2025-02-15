@@ -220,8 +220,8 @@ def payment_success(request, fine_id):
     if result['status'] == 'success':
         return render(request, 'users/payment_success.html', {
             'fine': result['fine'],
-            'payment_date': result['payment_date'],
-            'amount_paid': result['amount_paid']
+            'payment_date': result['date_paid'],
+            'amount_paid': result['amount']
         })
     else:
         return render(request, 'users/payment_error.html', {
