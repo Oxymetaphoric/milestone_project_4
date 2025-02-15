@@ -196,8 +196,9 @@ def process_payment_success(fine_id):
     """
     try:
         fine = get_object_or_404(Fine, fine_id=fine_id)
-        print (fine)
-        if fine.is_paid and fine.payment_id:
+        print("FINE:")
+        print (fine.is_paid)
+        if fine.is_paid:
             return {
                 'status': 'success',
                 'fine': fine,
