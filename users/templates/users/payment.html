@@ -71,9 +71,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.error) {
                 throw new Error(data.error);
             }
-            
+          const clientSecret = data.clientSecret;    
             // Confirm payment
-            const result = await stripe.confirmCardPayment(data.clientSecret, {
+            const result = await stripe.confirmCardPayment(clientSecret, {
                 payment_method: {
                     card: card,
                 }
