@@ -267,48 +267,28 @@ class StripeWH_Handler:
         return HttpResponse(status=200)
 
     def handle_payment_intent_succeeded(self, event):
-        print("reached handle_payment_intent_succeeded handler")
         self.logger.info("Payment intent succeeded")
         payment_intent = event['data']['object']
-        
-        # Get metadata
         fine_id = payment_intent.get('metadata', {}).get('fine_id')
-        user_id = payment_intent.get('metadata', {}).get('user_id')
-        print(fine_id)
-        print(user_id)
-        self.logger.info(f"Fine ID: {fine_id}, User ID: {user_id}")
         
-        if not fine_id or not user_id:
-            print(f"Missing fine_id or user_id in payment intent metadata. fine_id: {fine_id}, user_id: {user_id}")
-            return HttpResponse(status=200)  # Still return 200 to acknowledge receipt
+        if not fine_id:
+            self.logger.error("No fine_id found in payment_intent metadata")
+            return HttpResponse(status=400)
         
-        try:
-            # Import your LibraryCustomer model
-            from .models import LibraryCustomer
-            
-            # Get customer and pay the fine
-            customer = LibraryCustomer.objects.get(id=user_id)
-            success = customer.pay_fine(fine_id)
-            
-            if success:
-                self.logger.info(f"Successfully marked fine {fine_id} as paid for user {user_id}")
-            else:
-                self.logger.warning(f"Failed to mark fine {fine_id} as paid for user {user_id} - fine may not exist or is already paid")
-        except Exception as e:
-            self.logger.error(f"Error updating fine {fine_id}: {str(e)}")
-        
-        # Still call process_payment_success for any additional logic it handles
+        # Process the payment success
         result = process_payment_success(fine_id)
+        self.logger.info(f"Result from process_payment_success: {result}")
         
         if result['status'] == 'success':
             self.logger.info(f"Payment processed successfully for fine_id: {fine_id}")
+            # You can perform additional actions here, such as sending an email or updating the database
         elif result['status'] == 'processing':
             self.logger.info(f"Payment is being processed for fine_id: {fine_id}")
         else:
             self.logger.error(f"Error processing payment for fine_id: {fine_id} - {result['message']}")
         
         return HttpResponse(status=200)
-
+    
     def handle_payment_intent_payment_failed(self, event):
         """
         Handle the payment_intent.payment_failed webhook event
