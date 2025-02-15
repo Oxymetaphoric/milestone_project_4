@@ -199,6 +199,7 @@ def process_payment_success(fine_id):
         print("FINE:")
         print (fine.is_paid)
         if fine.is_paid:
+            print("FINE IS PAID")
             return {
                 'status': 'success',
                 'fine': fine,
@@ -206,6 +207,7 @@ def process_payment_success(fine_id):
                 'amount_paid': fine.amount
             }
         else:
+            print ("ERROR - FINE NOT PAID")
             return {
                 'status': 'processing',
                 'fine': fine,
