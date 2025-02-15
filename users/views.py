@@ -164,7 +164,6 @@ def payment_page(request, fine_id):
         'fine': fine,
         'stripe_public_key': settings.STRIPE_PUBLISHABLE_KEY
     }
-    print("payment page")
     return render(request, 'users/payment.html', context)
 
 @login_required
