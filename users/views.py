@@ -195,6 +195,7 @@ def process_payment_success(fine_id):
     """
     Process a successful payment for a given fine_id.
     """
+    print("process_payment_success started...")
     try:
         fine = get_object_or_404(Fine, fine_id=fine_id)
         return {
@@ -214,6 +215,7 @@ def process_payment_success(fine_id):
 @login_required
 def payment_success(request, fine_id):
     # Initialize the Stripe webhook handler
+    print("payment success started...")
     stripe_handler = StripeWH_Handler(request)
 
     # Process the payment success
@@ -221,6 +223,7 @@ def payment_success(request, fine_id):
 
     if payment_successful:
         # Fetch the fine and customer details
+        print("payment successful")
         fine = get_object_or_404(Fine, fine_id=fine_id)
         customer = get_object_or_404(LibraryCustomer, user_id=fine.customer.user_id)
 
@@ -230,6 +233,7 @@ def payment_success(request, fine_id):
         })
     else:
         # Render the error template if payment processing fails
+        print("payment error")
         return render(request, 'users/payment_error.html', {
             'message': 'An error occurred while processing your payment.'
         })
@@ -271,7 +275,7 @@ class StripeWH_Handler:
         return HttpResponse(status=200)
 
     def handle_payment_intent_succeeded(self, event):
-        print("Payment intent succeeded")
+        print("handle_Payment_intent_succeeded started...")
         payment_intent = event['data']['object']
         fine_id = payment_intent.get('metadata', {}).get('fine_id')
         
@@ -281,6 +285,7 @@ class StripeWH_Handler:
         
         # Process the payment success
         if self.process_payment_success(fine_id):
+            print("process_payment_success success...")
             return HttpResponse(status=200)
         else:
             return HttpResponse(status=500)
@@ -295,17 +300,17 @@ class StripeWH_Handler:
             customer = fine.customer
             print("process_payment_success fine:", fine.fine_id)
             customer.pay_fine(fine.fine_id)  # Call the pay_fine method
-            self.logger.info(f"Payment processed successfully for fine_id: {fine_id}")
+            print(f"Payment processed successfully for fine_id: {fine_id}")
             return True
         
         except Exception as e:
-            self.logger.error(f"Error processing payment for fine_id: {fine_id} - {str(e)}")
+            print(f"Error processing payment for fine_id: {fine_id} - {str(e)}")
             return False    
 
     def handle_payment_intent_payment_failed(self, event):
         """
         Handle the payment_intent.payment_failed webhook event
         """
-        self.logger.info("Payment intent failed")
-        # Add your logic here
+        print("Payment intent failed")
+        
         return HttpResponse(status=200)
