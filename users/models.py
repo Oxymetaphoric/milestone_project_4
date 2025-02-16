@@ -52,7 +52,7 @@ class LibraryCustomer(models.Model):
             print("is paid: ", fine.is_paid)
             fine.date_paid = timezone.now()
             fine.save()
-            print("saved fine: ", fine)
+            print("saved fine: ", fine.fine_id)
             return True
         except fine.DoesNotExist:
             return False
