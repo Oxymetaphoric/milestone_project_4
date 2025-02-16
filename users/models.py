@@ -44,6 +44,7 @@ class LibraryCustomer(models.Model):
 
     def pay_fine(self, fine_id):
         print("paying fine...")
+        print("fine id:", fine_id)
         fine = get_object_or_404(Fine, fine_id=fine_id)
         try:
             print("fine is:", fine)
