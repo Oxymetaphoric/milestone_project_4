@@ -131,40 +131,33 @@
                                 </thead>
                                 <tbody>
                                     {% for fine in fines %}
-                                    <tr>
-                                        <td>
-                                            <a href="{% url 'book_info' fine.loan_history.stock_item.BibNum %}">
-                                                <div class="text-truncate" style="max-width: 300px;" data-bs-toggle="tooltip" 
-                                                     title="{{ fine.loan_history.stock_item.Title }}">
-                                                    {{ fine.loan_history.stock_item.Title }}
-                                                </div>
-                                            </a>
-                                        </td>
-                                        <td>{{ fine.date_issued|date:"d M Y" }}</td>
-                                       <td>
-                                            £{{ fine.amount }}                                               
-                                        </td>
-                                        <td>
-                                            <div class="text-truncate" style="max-width: 300px;">
-                                                <a href="{% url 'payment_page' fine_id=fine.fine_id %}" class="btn btn-sm btn-primary">Pay fine</a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                      {% endfor %}
+                                        {% if not fine.is_paid %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url 'book_info' fine.loan_history.stock_item.BibNum %}">
+                                                        <div class="text-truncate" style="max-width: 300px;" data-bs-toggle="tooltip" 
+                                                             title="{{ fine.loan_history.stock_item.Title }}">
+                                                            {{ fine.loan_history.stock_item.Title }}
+                                                        </div>
+                                                    </a>
+                                                </td>
+                                                <td>{{ fine.date_issued|date:"d M Y" }}</td>
+                                               <td>
+                                                    £{{ fine.amount }}                                               
+                                                </td>
+                                                <td>
+                                                    <div class="text-truncate" style="max-width: 300px;">
+                                                        <a href="{% url 'payment_page' fine_id=fine.fine_id %}" class="btn btn-sm btn-primary">Pay fine</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
                                     <br>
                                     <tr>
                                         <td>Total</td>
                                         <td></td>
                                         <td>£{{total_fines}}</td>
-                                        <td>
-                                            <div class="text-truncate" style="max-width: 300px;">
-                                                <form action="#" method="POST"> 
-                                                    {% csrf_token %}
-                                                    <input type="hidden" name="fine_id" value="{{ loan.fine_id }}">
-                                                    <button type="submit" class="btn btn-sm btn-primary">Pay total</button>
-                                                </form>
-                                            </div>
-                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

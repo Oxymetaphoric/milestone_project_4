@@ -294,7 +294,7 @@ class StripeWH_Handler:
         try:
             fine = Fine.objects.get(fine_id=fine_id)
             customer = fine.customer
-            print("process_payment_success fine:")
+            print("process_payment_success fine:", fine.fine_id)
             customer.pay_fine(fine.fine_id)  # Call the pay_fine method
             self.logger.info(f"Payment processed successfully for fine_id: {fine_id}")
             return True
