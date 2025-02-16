@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 from decimal import Decimal
+from django.shortcuts import get_object_or_404
 import uuid
 
 FINE_CAP = Decimal('10.00')
@@ -43,8 +44,8 @@ class LibraryCustomer(models.Model):
 
     def pay_fine(self, fine_id):
         print("paying fine...")
+        fine = get_object_or_404(Fine, fine_id=fine_id)
         try:
-            fine = self.fines.get(fine_id=fine_id, is_paid=False)
             print("fine is:", fine)
             fine.is_paid = True
             print("is paid: ", fine.is_paid)
@@ -52,7 +53,7 @@ class LibraryCustomer(models.Model):
             fine.save()
             print("saved fine: ", fine)
             return True
-        except Fine.DoesNotExist:
+        except fine.DoesNotExist:
             return False
 
     def can_borrow(self):
