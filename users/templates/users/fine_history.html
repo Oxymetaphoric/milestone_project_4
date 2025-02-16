@@ -46,13 +46,13 @@
                 {% for fine in fine_history %}
                 <tr>
                     <td>
-                        <div class="text-truncate" style="margin: 10px; max-width: 100px;" data-bs-toggle="tooltip" 
+                        <div class="text-truncate" style="max-width: 150px;" data-bs-toggle="tooltip" 
                             title="{{ fine.loan_history.stock_item.Title }}">
                             {{ fine.loan_history.stock_item.Title }}
                         </div>
                     </td>
                     <td>
-                        <div class="text-truncate" style="margin:10px; max-width: 100px" data-bs-toggle="tooltip"
+                        <div class="text-truncate" style="max-width: 150px" data-bs-toggle="tooltip"
                             title="{{ fine.fine_id }}">
                             {{ fine.fine_id }}
                         </div>
