@@ -1,7 +1,7 @@
 
 # Milestone Project :four:
  
-This is my milestone four project for the Code Institute's 'Level 5 Diploma in Web Application Development.' The aim of this project is to design, develop, and implement a full-stack web application inluding back and front end design, and integrating an ePayment system via online service Stripe. This project will take the forn of a comprehensive library management web application using the python framework Django. This webapp will allow librarians and library staff to create, edit, and manage catalog records, check in and return items, and manage user accounts and stock control, providing an efficient, accessible tool for library inventory and user management. The application is aimed at libraries seeking a modern, flexible system to streamline their cataloging, inventory management, and user records, while also offering a user-friendly experience for library staff. This project will focus on the library staff and librarians use of the app, however possible future development could extend this project further to encompass a library customer access whereby users could login remotely, access their account information, and interact with the library system.  
+This is my milestone four project for the Code Institute's 'Level 5 Diploma in Web Application Development.' The aim of this project is to design, develop, and implement a full-stack web application inluding back and front end design, and integrating an ePayment system via online service Stripe. This project will take the form of a comprehensive library management web application using the python framework Django, called CLIO. Named after the greek goddess of knowledge and scholarship (it could also be a fun acronym, perhaps Clever Library Infomation Organisation). CLIO will allow librarians and library staff to create, edit, and manage catalog records, check in and return items, and manage user accounts and stock control, providing an efficient, accessible tool for library inventory and user management. CLIO is aimed at libraries seeking a modern, flexible system to streamline their cataloging, inventory management, and user records, while also offering a user-friendly experience for library staff. This project will focus on the library staff and librarians use of the app, however possible future development could extend this project further to encompass a library customer access whereby users could login remotely, access their account information, and interact with the library system.   
 
 [LIVE SITE](https://library-management-lms-c0ccc240f065.herokuapp.com/)
 
@@ -9,10 +9,11 @@ This is my milestone four project for the Code Institute's 'Level 5 Diploma in W
 
 The following accounts can be used for the purposes of testing and assessing the front-end of the project, staff-level has no access to admin, but may use the rest of the system as normal, test can access admin: 
 
-test : test123
-test_staff_privs : lower123
+|||
+|------|------|
+test | test123 
 
-PLease be aare that you will not be able to sign up to the application and will necessarily have to login using the above details. The system is not designed for open-access from the public and is dessigned with the concept of being a system front-line staff would access, neccessitating corporate-level control over sign-up and account creation. The current priviliges set up is Admin > Librarians > Staff: 
+Please be aare that you will not be able to sign-up to the application and will, necessarily, have to log-in using the above details. The system is not designed for open access from the public and is designed with the concept of being a system front-line staff would access, necessitating corporate-level control over sign-up and account creation. The current privilege heirarchy is Admin > Librarians > Staff: 
 
 #### Admin: 
 
@@ -25,7 +26,6 @@ Full access to read, write and destroy records within the system, limited access
 Staff: 
 
 Access to stock information with limited create and write permissions. Frontline staff would not be expected to, for example, create CatalogueItems, as these would be created on purchase of items and involved other systems outside the purview of this project.  
-
 
 ---
 
@@ -55,7 +55,6 @@ Access to stock information with limited create and write permissions. Frontline
 - Implement a reliable check-in/check-out system for managing item circulation.
 - Ensure compatibility across devices with a responsive design.
 
-
 ---
 
 ## :earth_africa: Scope
@@ -70,7 +69,7 @@ The user interface will leverage bootstrap5 to offer a stream-lined, visually ap
 
 #### Back End
 
-The database for this project uses SQLite, providing a lightweight and easily deployable solution for managing library catalog entries, inventory, and user records. Django's ORM allows for seamless database interactions, enabling complex queries, and maintaining data integrity across multiple related entities, such as catalog entries, inventory items, and user information. This setup ensures that catalog data and user records are efficiently managed and updated as required.
+The database for this project uses postgreSQL providing a robust and powerful solution for managing library catalog entries, inventory, and user records. Django's ORM allows for seamless database interactions, enabling complex queries, and maintaining data integrity across multiple related entities, such as catalog entries, inventory items, and user information. This setup ensures that catalog data and user records are efficiently managed and updated as required.
 
 ### Target Audience
 
@@ -108,17 +107,21 @@ The database for this project uses SQLite, providing a lightweight and easily de
 - As a site owner, I want to ensure data security for both catalog and user records.
 
 Identified Tasks/Needs the Website Should Fulfill
-Task/Need	Importance (1 -5)
-Clear and accessible navigation	5
-Responsiveness across devices	5
-Browse and search library catalog	5
-Manage user accounts securely	5
-Add, edit, and update catalog and stock records	4
-Update availability for catalog items	4
-Generate reports or summaries on inventory status	3
-Secure user login and account management	5
-Direct 404 links to home if catalog or user not found	4
-Accessibility
+
+| Task/Need	| Importance (1 -5) | 
+|---------------|--------------|
+Clear and accessible navigation	| 5
+Responsiveness across devices |	5
+Browse and search library catalog | 5
+Manage user accounts securely |	5
+Add, edit, and update catalog and stock records | 4
+Update availability for catalog items | 4
+Generate reports or summaries on inventory status | 3
+Secure user login and account management | 5
+Direct 404 links to home if catalog or user not found | 4
+
+
+###Accessibility
 
 In building the library app, several accessibility features to keep in mind:
 
@@ -129,6 +132,7 @@ In building the library app, several accessibility features to keep in mind:
 - Legible, accessible fonts for ease of reading.
 - Alternative text for any non-decorative images.
 - Clearly labeled, accessible forms to improve user interaction.
+
 ---
 
 ## :bricks: Structure
@@ -138,40 +142,32 @@ In building the library app, several accessibility features to keep in mind:
 ### Database Structure
 
     LibraryCustomer:
-
         Has many CurrentLoan records.
         Has many LoanHistory records.
         Has many Fine records.
 
     CurrentLoan:
-
         Belongs to one LibraryCustomer.
         Belongs to one StockItem.
 
     LoanHistory:
-
         Belongs to one LibraryCustomer.
         Belongs to one StockItem.
 
     Fine:
-
         Belongs to one LibraryCustomer.
         Belongs to one LoanHistory.
 
     Payment:
-
         Belongs to one Fine.
 
     PaymentHistory:
-
         Belongs to one Payment.
 
     CatalogueItem:
-
         Has many StockItem records.
 
     StockItem:
-
         Belongs to one CatalogueItem.
         Has one CurrentLoan record (if on loan).
 
@@ -179,11 +175,11 @@ In building the library app, several accessibility features to keep in mind:
 
 
 
-### Database Models
+## Database Models
 
-Users Models
+### Users Models
 
-LibraryCustomer
+#### LibraryCustomer
 
 | Field	| Data Type	| Constraints/Notes |
 |----------|----------|-------------|
@@ -199,7 +195,8 @@ email_address | CharField | max_length=256, required
 is_child | BooleanField | Required
 date_of_birth | DateField | Required
 
-CurrentLoan
+
+#### CurrentLoan
 
 Field | Data Type | constraints/Notes |
 |----|-------|-------|
@@ -209,7 +206,8 @@ stock_item | ForeignKey | References StockItem, on_delete=CASCADE
 loan_date | DateTimeField | Auto-set to current timestamp on creation
 due_date | DateTimeField | Required
 
-LoanHistory
+
+#### LoanHistory
 
 Field | Data Type | Constraints/Notes |
 |-----------|-------------|------------|
@@ -220,7 +218,8 @@ check_out_date | DateTimeField | Required
 return_date | DateTimeField | Required
 status | CharField | Choices: completed, overdue, lost
 
-Fine
+
+#### Fine
 
 Field | Data Type | Constraints/Notes |
 |----------|-------------|------------|
@@ -232,7 +231,8 @@ loan_history | OneToOneField | References LoanHistory, on_delete=CASCADE, unique
 is_paid | BooleanField | Default: False
 date_paid | DateTimeField | Optional
 
-Payment
+
+#### Payment
 
 Field | Data Type | Constraints/Notes |
 |------------|----------------|--------|
@@ -242,7 +242,8 @@ stripe_payment_id | CharField | max_length=100, required
 status | CharField | Choices: PENDING, PROCESSING, COMPLETED, FAILED, REFUNDED
 created_at | DateTimeField | Auto-set to current timestamp on creation
 
-PaymentHistory
+
+#### PaymentHistory
 
 Field | Data Type | Constraints/Notes |
 |-------------|-----------|-------------|
@@ -253,9 +254,10 @@ status_after | CharField | max_length=100, required
 timestamp | DateTimeField | Auto-set to current timestamp on creation
 notes | TextField | Optional
 
-Catalogue Models
 
-CatalogueItem
+### Catalogue Models
+
+#### CatalogueItem
 
 Field | Data Type | Constraints/Notes | 
 |-------------|------------|----------|
@@ -273,7 +275,8 @@ ItemLocation | CharField | max_length=256, required
 ReportDate | CharField | max_length=1024, required
 ItemCount | IntegerField | Default: 0
 
-StockItem
+
+#### StockItem
 
 Field | Data Type | Constraints/Notes | 
 |---------|------------|--------------|
@@ -284,15 +287,147 @@ Borrower | CharField | max_length=256, optional
 last_updated | DateTimeField | Auto-updated on save
 catalogue_item | ForeignKey | References CatalogueItem, on_delete=CASCADE
 
+
 ### Site Features
 
-Key features supported by this structure include:
+CLIO is designed to manage a library’s catalogue, users, loans, fines, and payments. Here’s a detailed breakdown of its functionality:
 
-- Account Management: Secure registration, login, and profile updates for library users.
-- Search Functionality: Users can search the catalog to view or check out available books.
-- Inventory Management: StockItem records help track physical availability of each catalog item.
-- Borrowing and Returning: Each BorrowRecord entry logs check-outs and returns, helping manage due dates and availability.
-- Admin Controls: Admin users can update catalog entries, manage stock items, and view borrowing history across users.
+1. User Management
+
+Library Customers
+
+    Registration: Users (library customers) can be added to the system with details like:
+
+        user_id (auto-generated, e.g., A0000001).
+        Personal details (first_name, last_name, email_address, etc.).
+        Address (street_address1, city_or_town, postcode, etc.).
+        Date of birth and child status (is_child).
+
+    Fine Management:
+
+        Customers can accumulate fines for overdue or lost items.
+        Fines are capped at a maximum amount (FINE_CAP).
+        Customers cannot borrow new items if their unpaid fines exceed the cap.
+
+    Loan History:
+
+        Tracks all past loans, including check-out and return dates.
+        Records the status of each loan (completed, overdue, lost).
+
+
+2. Catalogue Management
+
+Catalogue Items
+
+    Books and Other Items:
+
+        Each item in the library catalogue is represented by a CatalogueItem.
+        Fields include Title, Author, ISBN, Publisher, Subjects, ItemType, etc.
+
+    Stock Items:
+
+        Individual copies of catalogue items are represented by StockItem.
+        Tracks the status of each copy (available, on_loan, overdue, maintenance, etc.).
+        Links to the parent CatalogueItem.
+
+3. Loan Management
+
+Current Loans
+
+    Borrowing:
+
+        Customers can borrow items (StockItem), creating a CurrentLoan record.
+        Each loan has a loan_date and due_date.
+
+    Overdue Loans:
+
+        The system checks if a loan is overdue and updates its status.
+
+    Returning Items:
+
+        When an item is returned, the CurrentLoan is moved to LoanHistory.
+
+Loan History
+
+    Tracking:
+
+        Stores historical data about loans, including:
+
+            check_out_date and return_date.
+            Loan status (completed, overdue, lost).
+
+
+4. Fine and Payment Management
+Fines
+
+    Issuing Fines:
+
+        Fines are issued for overdue or lost items.
+        Each fine is linked to a LoanHistory record.
+
+    Fine Details:
+
+        Includes amount, date_issued, is_paid, and date_paid.
+
+Payments
+
+    Payment Processing:
+
+        Customers can pay fines using a payment system (e.g., Stripe).
+        Payments are recorded in the Payment model.
+
+    Payment History:
+
+        Tracks changes in payment status (PENDING, COMPLETED, FAILED, etc.).
+        Stores notes and timestamps for each status change.
+
+5. Search and Filtering
+
+    Catalogue Search:
+
+        Users can search for items by Title, Author, Publisher, etc.
+        Results are displayed in a user-friendly format.
+
+    User Search:
+
+        Librarians can search for users by user_id, first_name, last_name, etc.
+
+6. Admin and Reporting
+
+    Admin Interface:
+
+        Built-in Django admin interface for managing:
+
+            Users, catalogue items, loans, fines, and payments.
+
+6. Payment Integration
+
+    Stripe Integration:
+
+        Handles payments for fines.
+        Supports test mode for development.
+        Tracks payment status and history.
+
+7. Security and Permissions
+
+    Authentication:
+
+        Users must log in to access certain features (e.g., borrowing items, paying fines).
+
+    Permissions:
+
+        Different roles (e.g., librarians, customers) have different access levels.
+
+8. Deployment and Hosting
+
+    Production Environment:
+
+        Uses PostgreSQL for the database.
+        Deployed to a platform like Heroku, AWS, or DigitalOcean.
+
+    Environment Variables:
+
+        Sensitive data (e.g., Stripe API keys) stored in environment variables.
 
 ---
 
