@@ -298,9 +298,7 @@ class StripeWH_Handler:
             customer.pay_fine(fine.fine_id)  # Call the pay_fine method
             self.logger.info(f"Payment processed successfully for fine_id: {fine_id}")
             return True
-        except Fine.DoesNotExist:
-            self.logger.error(f"Fine not found for fine_id: {fine_id}")
-            return False
+        
         except Exception as e:
             self.logger.error(f"Error processing payment for fine_id: {fine_id} - {str(e)}")
             return False    
