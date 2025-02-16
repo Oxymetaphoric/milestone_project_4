@@ -55,7 +55,7 @@ class CatalogueForm(forms.ModelForm):
             self.fields[field].widget.attrs['placeholder'] = placeholder
             self.fields[field].widget.attrs['class'] = 'stripe-style-input'
             self.fields[field].label = False        # Autofocus on the first field
-        self.fields['first_name'].widget.attrs['autofocus'] = True
+        self.fields['BibNum'].widget.attrs['autofocus'] = True
 
 class StockForm(forms.ModelForm):
     bib_num = forms.CharField(disabled=True, required=False)
@@ -104,7 +104,7 @@ class StockForm(forms.ModelForm):
         self.fields['title'].initial = self.instance.Title
         self.fields['author'].initial = self.instance.Author
         self.fields['publisher'].initial = self.instance.Publisher
-        self.fields['publication_year'].intial = self.instance.PublicationYear
+        self.fields['publication_year'].initial = self.instance.PublicationYear
         self.fields['ISBN'].initial = self.instance.ISBN
         self.fields['subjects'].initial = self.instance.Subjects
         self.fields['item_type'].initial = self.instance.ItemType
