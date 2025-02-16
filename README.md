@@ -1,8 +1,31 @@
+
 # Milestone Project :four:
  
-This is my milestone four project for the Code Institute's 'Level 5 Diploma in Web Application Development.' The aim of this project is to design, develop, and implement a full-stack web application inluding back and front end design, and integrating an ePayment system via online service Stripe. This project will take the forn of a comprehensive library management web application using the python framework Django. This webapp will allow librarians and library staff to create, edit, and manage catalog records, check in and return items, and manage user accounts and stock control, providing an efficient, accessible tool for library inventory and user management. The application is aimed at libraries seeking a modern, flexible system to streamline their cataloging, inventory management, and user records, while also offering a user-friendly experience for library staff. This project will focus on the library staff and librarians use of the app, however possible future development could extend this project further to encompass a library customer access whereby users could login remotely, access their account information and interact with the library system.  
+This is my milestone four project for the Code Institute's 'Level 5 Diploma in Web Application Development.' The aim of this project is to design, develop, and implement a full-stack web application inluding back and front end design, and integrating an ePayment system via online service Stripe. This project will take the forn of a comprehensive library management web application using the python framework Django. This webapp will allow librarians and library staff to create, edit, and manage catalog records, check in and return items, and manage user accounts and stock control, providing an efficient, accessible tool for library inventory and user management. The application is aimed at libraries seeking a modern, flexible system to streamline their cataloging, inventory management, and user records, while also offering a user-friendly experience for library staff. This project will focus on the library staff and librarians use of the app, however possible future development could extend this project further to encompass a library customer access whereby users could login remotely, access their account information, and interact with the library system.  
 
 [LIVE SITE](https://library-management-lms-c0ccc240f065.herokuapp.com/)
+
+### Testing logins: 
+
+The following accounts can be used for the purposes of testing and assessing the front-end of the project, staff-level has no access to admin, but may use the rest of the system as normal, test can access admin: 
+
+test : test123
+test_staff_privs : lower123
+
+PLease be aare that you will not be able to sign up to the application and will necessarily have to login using the above details. The system is not designed for open-access from the public and is dessigned with the concept of being a system front-line staff would access, neccessitating corporate-level control over sign-up and account creation. The current priviliges set up is Admin > Librarians > Staff: 
+
+#### Admin: 
+
+Full control of the system including creating, deleting and amending all records within the system and in the admin panel. This would be utilised by administrative staff, or IT departments. 
+
+Librarian :
+
+Full access to read, write and destroy records within the system, limited access to create new staff members. 
+
+Staff: 
+
+Access to stock information with limited create and write permissions. Frontline staff would not be expected to, for example, create CatalogueItems, as these would be created on purchase of items and involved other systems outside the purview of this project.  
+
 
 ---
 
@@ -114,55 +137,152 @@ In building the library app, several accessibility features to keep in mind:
 
 ### Database Structure
 
-The library management system relies on a well-structured relational database to manage data on catalog items, stock inventory, and library users. Four main tables form the foundation of this database: CatalogueItem, StockItem, LibraryUser, and BorrowRecord. This schema ensures efficient querying, inventory tracking, and logging of user transactions, from borrowing to returning books.
-Entity Relationship Diagram
+    LibraryCustomer:
 
-An Entity Relationship Diagram (ERD) outlines the connections between these tables. Key relationships include:
+        Has many CurrentLoan records.
+        Has many LoanHistory records.
+        Has many Fine records.
 
-- Each CatalogueItem entry can relate to multiple StockItem records.
-- Each LibraryUser may have multiple BorrowRecord entries, tracking the user’s check-out history.
-- StockItem connects both CatalogueItem and BorrowRecord, facilitating the check-out/check-in process and providing current availability.
+    CurrentLoan:
+
+        Belongs to one LibraryCustomer.
+        Belongs to one StockItem.
+
+    LoanHistory:
+
+        Belongs to one LibraryCustomer.
+        Belongs to one StockItem.
+
+    Fine:
+
+        Belongs to one LibraryCustomer.
+        Belongs to one LoanHistory.
+
+    Payment:
+
+        Belongs to one Fine.
+
+    PaymentHistory:
+
+        Belongs to one Payment.
+
+    CatalogueItem:
+
+        Has many StockItem records.
+
+    StockItem:
+
+        Belongs to one CatalogueItem.
+        Has one CurrentLoan record (if on loan).
 
 ### Schema Diagram
 
-- A database schema diagram illustrates the field constraints, data types, and keys used in each table.
 
 
 ### Database Models
 
-    CatalogueItem Table
-    Stores details on individual book titles, including the primary BibNum, title, and other descriptive fields.
-    Column Name	Data Type	Constraints	Key	Nullable
-    bib_num	INT	AUTO_INCREMENT	PK	No
-    title	STRING			No
-    author	STRING			Yes
-    genre	STRING			Yes
-    publish_date	DATE			Yes
+Users Models
 
-    StockItem Table
-    Manages individual copies of cataloged books. Each StockItem references a CatalogueItem and includes status fields to track availability.
-    Column Name	Data Type	Constraints	Key	Nullable
-    stock_id	INT	AUTO_INCREMENT	PK	No
-    bib_num	INT	FK (CatalogueItem)		No
-    status	STRING	ENUM ('available', 'checked out')		No
+LibraryCustomer
 
-    LibraryUser Table
-    Records user information, from ID and username to library registration details.
-    Column Name	Data Type	Constraints	Key	Nullable
-    user_id	STRING	UNIQUE	PK	No
-    username	STRING(50)			No
-    email	STRING(255)			No
-    is_admin	BOOL			No
-    date_joined	DATETIME	DEFAULT CURRENT_TIMESTAMP		No
+| Field	| Data Type	| Constraints/Notes |
+|----------|----------|-------------|
+user_id | CharField | Primary key, max_length=8, unique, auto-generated (e.g., A0000001)
+first_name | CharField | max_length=256, optional
+last_name | CharField | max_length=256, required
+street_address1	| CharField	| max_length=256, required
+street_address2	| CharField | max_length=256, optional
+city_or_town | CharField | max_length=256, required
+postcode | CharField | max_length=20, required
+phone_number | CharField | max_length=25, required
+email_address | CharField | max_length=256, required
+is_child | BooleanField | Required
+date_of_birth | DateField | Required
 
-    BorrowRecord Table
-    Links LibraryUser and StockItem, tracking each book borrowing transaction’s start and end dates.
-    Column Name	Data Type	Constraints	Key	Nullable
-    record_id	INT	AUTO_INCREMENT	PK	No
-    user_id	STRING	FK (LibraryUser)		No
-    stock_id	INT	FK (StockItem)		No
-    borrow_date	DATETIME	DEFAULT CURRENT_TIMESTAMP		No
-    return_date	DATETIME			Yes
+CurrentLoan
+
+Field | Data Type | constraints/Notes |
+|----|-------|-------|
+id | AutoField | Primary key, auto-increment
+customer | ForeignKey | References LibraryCustomer, on_delete=CASCADE
+stock_item | ForeignKey | References StockItem, on_delete=CASCADE
+loan_date | DateTimeField | Auto-set to current timestamp on creation
+due_date | DateTimeField | Required
+
+LoanHistory
+
+Field | Data Type | Constraints/Notes |
+|-----------|-------------|------------|
+id | AutoField | Primary key, auto-increment
+customer | ForeignKey | References LibraryCustomer, on_delete=CASCADE
+stock_item | ForeignKey |References StockItem, on_delete=CASCADE
+check_out_date | DateTimeField | Required
+return_date | DateTimeField | Required
+status | CharField | Choices: completed, overdue, lost
+
+Fine
+
+Field | Data Type | Constraints/Notes |
+|----------|-------------|------------|
+fine_id | UUIDField | Primary key, auto-generated
+customer | ForeignKey | References LibraryCustomer, on_delete=CASCADE
+amount |DecimalField | max_digits=6, decimal_places=2
+date_issued | DateTimeField | Auto-set to current timestamp on creation
+loan_history | OneToOneField | References LoanHistory, on_delete=CASCADE, unique
+is_paid | BooleanField | Default: False
+date_paid | DateTimeField | Optional
+
+Payment
+
+Field | Data Type | Constraints/Notes |
+|------------|----------------|--------|
+payment_id | UUIDField | Primary key, auto-generated
+fine | ForeignKey | References Fine, on_delete=CASCADE
+stripe_payment_id | CharField | max_length=100, required
+status | CharField | Choices: PENDING, PROCESSING, COMPLETED, FAILED, REFUNDED
+created_at | DateTimeField | Auto-set to current timestamp on creation
+
+PaymentHistory
+
+Field | Data Type | Constraints/Notes |
+|-------------|-----------|-------------|
+history_id | UUIDField | Primary key, auto-generated
+payment | ForeignKey | References Payment, on_delete=CASCADE
+status_before | CharField | max_length=100, required
+status_after | CharField | max_length=100, required
+timestamp | DateTimeField | Auto-set to current timestamp on creation
+notes | TextField | Optional
+
+Catalogue Models
+
+CatalogueItem
+
+Field | Data Type | Constraints/Notes | 
+|-------------|------------|----------|
+BibNum | CharField | Primary key, max_length=256, required
+Title | CharField | max_length=1024, required
+Author | CharField | max_length=1024, required
+ISBN | CharField | max_length=1024, optional
+PublicationYear | CharField | max_length=1024, optional
+Publisher | CharField | max_length=1024, required
+Subjects | CharField | max_length=1024, required
+ItemType | CharField | max_length=256, required
+ItemCollection | CharField | max_length=256, required
+FloatingItem | CharField | max_length=1024, optional
+ItemLocation | CharField | max_length=256, required
+ReportDate | CharField | max_length=1024, required
+ItemCount | IntegerField | Default: 0
+
+StockItem
+
+Field | Data Type | Constraints/Notes | 
+|---------|------------|--------------|
+StockID	| UUIDField	| Primary key, auto-generated
+Status | CharField | Choices: on_loan, available, overdue, maintenance, discarded, missing
+Location | CharField | max_length=256, optional
+Borrower | CharField | max_length=256, optional
+last_updated | DateTimeField | Auto-updated on save
+catalogue_item | ForeignKey | References CatalogueItem, on_delete=CASCADE
 
 ### Site Features
 
