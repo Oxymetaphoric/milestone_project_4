@@ -1,6 +1,7 @@
 asgiref==3.8.1
 certifi==2025.1.31
 charset-normalizer==3.4.1
+coverage==7.6.12
 crispy-bootstrap5==2024.10
 dj-database-url==2.3.0
 Django==5.1.2
