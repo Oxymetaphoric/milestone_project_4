@@ -430,28 +430,70 @@ Payments
         Sensitive data (e.g., Stripe API keys) stored in environment variables.
 
 ---
-
-## :skull_and_crossbones: Skeleton
-
----
-
-### Wireframes
-
-#### Desktop Wireframes
-
-#### Mobile Wireframes
-
----
-
-## :art: Surface
-
 ---
 
 ### Design
 
-#### Typography
+1. Typography
 
-#### Colour Palettes
+Font Choice: Roboto, A clean, legible font, was chosen early in the project to ensure readability across all devices and screen sizes. The font family used is sans-serif (e.g., Arial, Helvetica, or Roboto), which is modern, neutral, and easy to read.
+
+    Font Hierarchy:
+
+        Headers: Bold and slightly larger to distinguish sections and improve scannability.
+
+        Body Text: Standard size with adequate line spacing for comfortable reading.
+
+        Tables: Monospaced fonts (e.g., Courier New) are avoided in favor of proportional fonts for better alignment and readability.
+
+2. Color Scheme
+
+    Neutral Palette: A neutral color palette (e.g., shades of gray, white, and black) was chosen to keep the interface clean and professional.
+
+    Accent Colors: Subtle accent colors (e.g., blue or green) are used sparingly for interactive elements like buttons and links to draw attention without overwhelming the user.
+
+    Corporate Branding: The design is intentionally minimal to allow for easy integration of institutional branding (e.g., logos, colors) in the future.
+
+3. Layout
+
+    Header:
+
+        The top header features a dummy logo as a placeholder, with the intention that it will be replaced by the corporate branding of the implementing institution.
+
+        The header is clean and unobtrusive, providing a consistent anchor point for navigation.
+
+    Side Panel:
+
+        A side panel is used for the main navigation, providing easy access to key sections of the application (e.g., catalogue, users, loans, fines).
+
+        The side panel is collapsible to maximize screen space when needed.
+
+    Main Content Area:
+
+        The main content area is designed to be flexible, accommodating various types of information (e.g., tables, forms, details pages).
+
+        Bootstrap’s grid system ensures a responsive layout that adapts to different screen sizes.
+
+4. Navigation
+
+    Ease of Use:
+
+        The side-panel navigation is designed for ease of use, with clear labels and intuitive grouping of related features.
+
+        Active navigation items are highlighted to provide visual feedback.
+
+5. Responsiveness
+
+    Mobile-Friendly:
+
+        The design is fully responsive, ensuring a seamless experience on desktops, tablets, and mobile devices.
+
+        The side panel collapses into a hamburger menu on smaller screens to save space.
+
+6. Custom Branding:
+
+        The design is intentionally minimal to allow for easy integration of institutional branding (e.g., logos, colors, fonts).
+
 
 ### Technologies and Tools used
 
@@ -512,8 +554,6 @@ Payments
 ### Lighthouse
 
 ---
-
-### Mobile Testing
 
 ### Bug fixes
 

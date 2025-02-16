@@ -2,6 +2,10 @@ html {
   height: 100vh;
 }
 
+h1 {
+  font-size: 14pt;
+}
+
 body {
   font-family: 'Arial';
   color: black;
