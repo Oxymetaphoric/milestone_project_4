@@ -212,7 +212,6 @@ def process_payment_success(fine_id):
         }
 
 @login_required
-@login_required
 def payment_success(request, fine_id):
     # Initialize the Stripe webhook handler
     stripe_handler = StripeWH_Handler(request)
