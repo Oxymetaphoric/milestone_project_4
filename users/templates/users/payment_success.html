@@ -15,7 +15,7 @@
                         <p>Returned: {{fine.loan_history.return_date }}
                         <p>Amount: £{{ fine.amount }}</p>
                         <p>Date Issued: {{ fine.date_issued|date:"F d, Y" }}</p>
-                        <p>Date paidL {{ fine.date-paid|date:"F d, Y" }}</p>
+                        <p>Date paid: {{ fine.date_paid|date:"F d, Y" }}</p>
                     </div>
                         
                     <div id="card-errors" class="alert alert-danger d-none" role="alert"></div>
