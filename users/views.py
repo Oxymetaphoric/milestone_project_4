@@ -182,8 +182,6 @@ def create_payment_intent(request, fine_id):
             )
             
             # Log the entire intent object for debugging
-            print(intent.client_secret)
-            print(intent.metadata)
             client_secret = intent.client_secret
             client_secret_string = str(client_secret)
             return JsonResponse({
@@ -292,10 +290,12 @@ class StripeWH_Handler:
         """
         Reusable method to process payment success for a given fine_id.
         """
+        print("process_payment_success started...")
         try:
             fine = Fine.objects.get(fine_id=fine_id)
             customer = fine.customer
-            customer.pay_fine(fine)  # Call the pay_fine method
+            print("process_payment_success fine:")
+            customer.pay_fine(fine.fine_id)  # Call the pay_fine method
             self.logger.info(f"Payment processed successfully for fine_id: {fine_id}")
             return True
         except Fine.DoesNotExist:
