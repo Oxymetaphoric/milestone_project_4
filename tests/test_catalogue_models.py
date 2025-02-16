@@ -1,5 +1,6 @@
+from django.test import TestCase, Client
+from django.contrib.auth.models import User
 import uuid
-from django.test import TestCase
 from catalogue.models import CatalogueItem, StockItem
 
 class CatalogueItemModelTest(TestCase):

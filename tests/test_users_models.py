@@ -1,7 +1,8 @@
-from django.test import TestCase
+from django.test import TestCase, Client
+from django.contrib.auth.models import User
 from django.utils import timezone
 from decimal import Decimal
-from catalogue.models import StockItem  # Assuming this exists
+from catalogue.models import StockItem, CatalogueItem
 from users.models import (
     LibraryCustomer, CurrentLoan, LoanHistory, Fine, Payment, PaymentHistory
 )

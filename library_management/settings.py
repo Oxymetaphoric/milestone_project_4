@@ -19,13 +19,16 @@ import django_heroku
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(os.path.join(BASE_DIR, '.env'))
-ENVIRONMENT = os.getenv('DJANGO_ENV', 'development')
+ENVIRONMENT = 'ef%wv6vw^ss)f^!eddnny=qqm-=xgf5i0$$qet-utl2)+&^hby'
+ 
+
+#os.getenv('DJANGO_ENV', 'development')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', '')
+SECRET_KEY =os.getenv('SECRET_KEY', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'development' in os.environ
