@@ -1,8 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
-<h1>Payment Error</h1>
-<p>{{ message }}</p>
-<p>Please contact support if you believe this is an error.</p>
+    <div class="col-6 container">
+        <div class="row">
+            <div class="card col-12 p-0">
+                <div class="card-header">
+                    <h3 class="text-center mb-0">Payment Successful</h3>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <p>{{ message }}</p>
+                    </div>
+                    <div id="card-errors" class="alert alert-danger d-none" role="alert"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
+
