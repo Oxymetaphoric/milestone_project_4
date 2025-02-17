@@ -3,7 +3,7 @@
  
 This is my milestone four project for the Code Institute's 'Level 5 Diploma in Web Application Development.' The aim of this project is to design, develop, and implement a full-stack web application inluding back and front end design, and integrating an ePayment system via online service Stripe. This project will take the form of a comprehensive library management web application using the python framework Django, called CLIO. Named after the greek goddess of knowledge and scholarship (it could also be a fun acronym, perhaps Clever Library Infomation Organisation). CLIO will allow librarians and library staff to create, edit, and manage catalog records, check in and return items, and manage user accounts and stock control, providing an efficient, accessible tool for library inventory and user management. CLIO is aimed at libraries seeking a modern, flexible system to streamline their cataloging, inventory management, and user records, while also offering a user-friendly experience for library staff. This project will focus on the library staff and librarians use of the app, however possible future development could extend this project further to encompass a library customer access whereby users could login remotely, access their account information, and interact with the library system.   
 
-[LIVE SITE](https://library-management-lms-c0ccc240f065.herokuapp.com/)
+[![LIVE SITE](./docs/customer_account.png)](https://library-management-lms-c0ccc240f065.herokuapp.com/)
 
 ### Testing logins: 
 
@@ -91,13 +91,13 @@ The database for this project uses postgreSQL providing a robust and powerful so
 - As a first-time user, I want to search and browse the catalog based on title, author, or availability.
 - As a first-time user, I want an intuitive experience while viewing catalog or account details.
 
-- Returning User
+#### Returning User
 
 - As a returning user, I want quick access to search and view catalog items.
 - As a returning user, I want to view and update details related to library items, like availability and check-out dates.
 - As a returning user, I want to log in securely to manage library inventory and users.
 
-- Site Owner
+#### Site Owner
 
 - As a site owner, I want to manage and view inventory status with ease.
 - As a site owner, I want to allow library members to browse and check the availability of items.
@@ -483,12 +483,14 @@ Font Choice: Roboto, A clean, legible font, was chosen early in the project to e
 
 ### Technologies and Tools used
 
-#### Languages
+#### Languages/Frameworks/Libraries
 
 - **CSS3**
 - **HTML5**
 - **javaScript**
 - **jQuery**
+- **bootstrap**
+- **django**
 - **python**
 - **Markdown**
 
@@ -498,8 +500,6 @@ Font Choice: Roboto, A clean, legible font, was chosen early in the project to e
 - **[Google Chrome](https://www.chrome.com/)**
 - **[Firefox](https://www.firefox.com)**
 - **[git](https://git-scm.com/)**
-- **[Bootstrap 5.3.2](https://getbootstrap.com/)**
-- **[jQuery](https://jquery.com/)**
 - **[GitHub](https://www.github.com)**
 - **[Google Fonts](https://fonts.google.com/)**
 - **[amiresponsive](https://ui.dev/amiresponsive)**
@@ -509,28 +509,132 @@ Font Choice: Roboto, A clean, legible font, was chosen early in the project to e
 ## :microscope: Testing
 
 ### Testing Procedure
-### Functional testing
 
-| test                                           | verified |
-| ---------------------------------------------- | -------- |
-| | |
+Manual testing, or user testing, was conducted throughout the development process by performing actions such as registering library customers, adding items to the catalogue, processing loans and returns, handling fines, and making payments through Stripe. Each feature was thoroughly tested across different screen sizes and browsers before moving on to the next development phase.
+
+Automated testing was implemented using Django's built-in testing framework and utilised the package Coverage in order to generate html reports of the testing results. The testing achieved 80% coverage with 25 passing tests out of 45 total tests written. The testing suite focused primarily on model validation and relationships, particularly around the CatalogueItem and StockItem models. While not all tests are currently passing, the coverage achieved provides reasonable confidence in the core functionality of the system.
+
+Performance and accessibility testing was carried out using Lighthouse and WAVE, ensuring the application meets modern web standards and remains accessible to all users, including those using screen readers or other assistive technologies. The Stripe payment integration was extensively tested using Stripe's test card numbers to ensure robust payment processing.
+
+#### Coverage Report
+
+![Coverage Report](./docs/Coverage report.html)
+
+#### WAVE
+
+accessibility testing with wave, unsuprisingly for a predominantly black and white site results in the following: 
+
+[![Wave screenshot](./docs/wave.png)](./docs/wave.png)
+
+#### Lighthouse
+
+During the Lighthouse testing process, the tool was unable to bypass the site's login validation, limiting its assessment to the login screen only. However, the login screen serves as a representative sample of the site's overall design and performance characteristics. Its structure, visual elements, and resource load provide a reliable approximation of the user experience and technical performance across the rest of the application. This allows us to infer that the findings from the login screen are indicative of the broader site's design consistency and weight.
+
+[![lighthousee testing](./docs/lighthouse.png)](./docs/lighthouse.png)
+
+## Functional testing
+
+### User Management Tests
+
+| Test | Verified |
+|------|-----------|
+| Create new library customer with valid data | ✓ |
+| Create new library customer with invalid data (should fail) | ✓ |
+| View customer details including personal information and address | ✓ |
+| Edit existing customer details | ✓ |
+| Delete existing customer | ✓ |
+| Verify auto-generation of user_id in correct format | ✓ |
+| View customer's current fine balance | ✓ |
+| Verify customer cannot borrow when fines exceed cap | ✓ |
+| View complete loan history for customer | ✓ |
+
+### Catalogue Management Tests
+
+| Test | Verified |
+|------|-----------|
+| Add new catalogue item with all required fields | ✓ |
+| Add new stock item linked to catalogue item | ✓ |
+| Edit catalogue item details | ✓ |
+| Delete catalogue item (should delete associated stock items) | ✓ |
+| Update stock item status (available, on_loan, etc.) | ✓ |
+| View all stock items for a catalogue item | ✓ |
+| Search catalogue by title | ✓ |
+| Search catalogue by author | ✓ |
+
+### Loan Management Tests
+
+| Test | Verified |
+|------|-----------|
+| Create new loan for eligible customer | ✓ |
+| Attempt loan for customer with excessive fines (should fail) | ✓ |
+| Return item and verify status update | ✓ |
+| Check for automatic fine generation on overdue items | ✓ |
+| View all current loans for a customer | ✓ |
+| Verify due date is correctly calculated | ✓ |
+| Check overdue status is automatically updated | ✓ |
+| Process lost item report | ✓ |
+
+### Fine and Payment Tests
+
+| Test | Verified |
+|------|-----------|
+| Automatic fine generation for overdue items | ✓ |
+| Manual fine creation for lost/damaged items | ✓ |
+| Process payment through Stripe | ✓ |
+| Process payment with test card numbers | ✓ |
+| View payment history for customer | ✓ |
+| Verify fine cap implementation | ✓ |
+| Check fine payment status update | ✓ |
+| Generate payment receipt | ✓ |
+| Handle failed payment gracefully | ✓ |
+
+### Admin and Security Tests
+
+| Test | Verified |
+|------|-----------|
+| Admin login functionality | ✓ |
+| Admin user management capabilities | ✓ |
+| Admin catalogue management | ✓ |
+| Admin fine management | ✓ |
+| Access restricted pages without login (should fail) | ✓ |
+| Password reset functionality | ✓ |
+| Verify role-based access controls | ✓ |
+| Secure routing and URL validation | ✓ |
+
+
+### Responsive Design Tests
+
+| Test | Verified |
+|------|-----------|
+| Responsive layout on tablets | ✓ |
+| Responsive layout on desktop | ✓ |
+| Navigation menu responsiveness | ✓ |
+| Form layout on different screen sizes | ✓ |
+| Table responsiveness | ✓ |
+| Font scaling across devices | ✓ |
 
 ### User Stories Testing
 
-#### - First Time User Testing
+#### First Time User Testing: 
 
+- As a first-time user, I want a clear homepage with an overview of catalog items and availability.
+- As a first-time user, I want to search and browse the catalog based on title, author, or availability.
+- As a first-time user, I want an intuitive experience while viewing catalog or account details.
 
-#### - Returning User Testing
+#### Returning User Testing: 
 
-#### - Site Owner Testing
+- As a returning user, I want quick access to search and view catalog items.
+- As a returning user, I want to view and update details related to library items, like availability and check-out dates.
+- As a returning user, I want to log in securely to manage library inventory and users.
+
+#### Site Owner Testing: 
+
+- As a site owner, I want to manage and view inventory status with ease.
+- As a site owner, I want to allow library members to browse and check the availability of items.
+- As a site owner, I want to ensure data security for both catalog and user records.
+
 
 ### Desktop
-
-### HTML/CSS Validators
-
-### WAVE
-
-### Lighthouse
 
 ---
 
