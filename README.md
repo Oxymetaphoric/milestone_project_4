@@ -18,7 +18,7 @@ test_admin_privs | test123 | admin
 test_librarian_privs | loginrequired | librarian
 test_staff_privs | loginrequired | staff
 
-Please be aare that you will not be able to sign-up to the application and will, necessarily, have to log-in using the above details. The system is not designed for open access from the public and is designed with the concept of being a system front-line staff would access, necessitating corporate-level control over sign-up and account creation. The current privilege heirarchy is Admin > Librarians > Staff: 
+Please be aware that you will not be able to sign-up to the application and will, necessarily, have to log-in using the above details. The system is not designed for open access from the public and is designed with the concept of being a system front-line staff would access, necessitating corporate-level control over sign-up and account creation. The current privilege heirarchy is Admin > Librarians > Staff: 
 
 #### Admin: 
 
@@ -30,7 +30,14 @@ Full access to read, write and destroy records within the system, limited access
 
 #### Staff: 
 
-Read access to all system information with limited create and write permissions and no admin access. Frontline staff would not be expected to, for example, create CatalogueItems, as these would be created on purchase of items and involved other systems outside the purview of this project.  
+Read access to all system information with limited create and write permissions and no admin access. Frontline staff would not be expected to, for example, create Catalogue entries, as these would be created on purchase of items and involves other systems outside the purview of this project.  
+
+If you wish to test the payment functionality, the best way would be to check out an item to a customer, access the customers account, then mark the item as lost. This will generate a fee on the account that can then be paid using the stripe test card data: 
+
+test card | card number | expiry date | ccv | zip code
+|-------------|-------------|------|--------|------|
+| success | 4242424242424242 | 01/30 | 123 | 12345 |
+| error | 4000000000009995 | 01/30 | 123 ||| 12345 | 
 
 ---
 
