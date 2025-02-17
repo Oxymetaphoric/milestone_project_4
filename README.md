@@ -4,6 +4,9 @@ This is my milestone four project for the Code Institute's 'Level 5 Diploma in W
 
 [![LIVE SITE](./docs/customer_account.png)](https://library-management-lms-c0ccc240f065.herokuapp.com/)
 
+
+[LIVE SITE](https://library-management-lms-c0ccc240f065.herokuapp.com/)
+
 ### Testing logins: 
 
 The following accounts can be used for the purposes of testing and assessing the front-end of the project: 
