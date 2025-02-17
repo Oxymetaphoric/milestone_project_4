@@ -1,4 +1,3 @@
-
 # Milestone Project :four:
  
 This is my milestone four project for the Code Institute's 'Level 5 Diploma in Web Application Development.' The aim of this project is to design, develop, and implement a full-stack web application inluding back and front end design, and integrating an ePayment system via online service Stripe. This project will take the form of a comprehensive library management web application using the python framework Django, called CLIO. Named after the greek goddess of knowledge and scholarship (it could also be a fun acronym, perhaps Clever Library Infomation Organisation). CLIO will allow librarians and library staff to create, edit, and manage catalog records, check in and return items, and manage user accounts and stock control, providing an efficient, accessible tool for library inventory and user management. CLIO is aimed at libraries seeking a modern, flexible system to streamline their cataloging, inventory management, and user records, while also offering a user-friendly experience for library staff. This project will focus on the library staff and librarians use of the app, however possible future development could extend this project further to encompass a library customer access whereby users could login remotely, access their account information, and interact with the library system.   
@@ -137,6 +136,7 @@ In building the library app, several accessibility features to keep in mind:
 
 ### Core Model Relationships
 
+```
 LibraryCustomer
 ├── CurrentLoan (One-to-Many)
 │   └── StockItem (One-to-One)
@@ -146,12 +146,13 @@ LibraryCustomer
     ├── LoanHistory (One-to-One)
     └── Payment (One-to-Many)
         └── PaymentHistory (One-to-One)
-
+```
+```
 CatalogueItem
 └── StockItem (One-to-Many)
     ├── CurrentLoan (One-to-One)
     └── LoanHistory (One-to-Many)
-
+```
 
 ### Detailed Relationship Descriptions
 
@@ -994,7 +995,7 @@ This test data structure ensures:
 
 #### Coverage Report
 
-[Coverage Report](./docs/Coverage report.html)
+[coverage report](./docs/Coverage report.html)
 
 #### WAVE
 
@@ -1464,7 +1465,6 @@ Solution: Replaced {% toggle %} with the correct Django syntax for linking to an
 
 ---
 
-
 ### Technologies and Tools used
 
 #### Languages/Frameworks/Libraries
@@ -1487,10 +1487,12 @@ Solution: Replaced {% toggle %} with the correct Django syntax for linking to an
 - **[GitHub](https://www.github.com)**
 - **[Google Fonts](https://fonts.google.com/)**
 - **[amiresponsive](https://ui.dev/amiresponsive)**
+- **[DBDiagram.io](http://www.dbdiagram.io)**
 
 ---
 
 ## :heart: Credits and Acknowledgments
 
-https://img.logoipsum.com/332.svg
-My wonderful family!
+- https://img.logoipsum.com/332.svg
+- my fantastic colleagues and fellow students 
+- My wonderful family!
