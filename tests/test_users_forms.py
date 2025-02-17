@@ -135,7 +135,6 @@ class CustomerFormTests(TestCase):
             msg="The last element in layout should be a Div instance."
         )
         # Check that the Div contains a Submit button by inspecting its string representation.
-        # (This is a simplistic check; you may adjust it as needed.)
         self.assertIn('Submit', str(layout[5]),
                       msg="The Div in the layout should contain a Submit button.")
 

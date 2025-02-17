@@ -58,14 +58,13 @@ class CatalogueItemModelTest(TestCase):
         self.assertEqual(self.catalogue_item.ItemCount, 0)
         
         # Create some mock stock items linked to this catalogue item
-        # Assuming StockItem has a ForeignKey to CatalogueItem named 'catalogue_item'
         StockItem.objects.create(
             catalogue_item=self.catalogue_item,
-            Status='Available'  # This is required based on your model
+            Status='Available'  
         )
         StockItem.objects.create(
             catalogue_item=self.catalogue_item,
-            Status='Available'  # This is required based on your model
+            Status='Available'  
         )
         
         # Run the update method
@@ -84,7 +83,7 @@ class CatalogueItemModelTest(TestCase):
         retrieved_item = CatalogueItem.objects.get(pk='B12345')
         self.assertEqual(retrieved_item, self.catalogue_item)
         
-        # Test that we can't create another item with the same BibNum
+        
         with self.assertRaises(Exception):
             CatalogueItem.objects.create(
                 BibNum='B12345',  # Same as existing item
@@ -200,5 +199,4 @@ class StockItemModelTest(TestCase):
 
     def test_current_loan_property(self):
         """Test the current_loan property"""
-        # Without mocking CurrentLoan, we just test that it doesn't error
         self.assertIsNone(self.stock_item.current_loan)

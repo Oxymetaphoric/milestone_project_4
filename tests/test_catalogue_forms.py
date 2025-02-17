@@ -19,8 +19,6 @@ class CatalogueFormTests(TestCase):
     def test_form_valid_with_valid_data(self):
         """
         Test that the form validates when valid data is provided.
-        (This test is currently skipped because the autofocus bug in __init__
-         prevents the form from initializing. Uncomment after fixing the bug.)
         """
         valid_data = {
             'BibNum': '12345',

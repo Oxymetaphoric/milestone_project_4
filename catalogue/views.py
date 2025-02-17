@@ -16,7 +16,6 @@ DAILY_RATE = Decimal('0.50')
 LOST_ITEM = Decimal('10.00')
 LOAN_PERIOD = 2
 
-# Create your views here.
 @login_required
 def display_catalogue_items(request):
 
