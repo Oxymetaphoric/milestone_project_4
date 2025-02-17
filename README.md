@@ -7,11 +7,14 @@ This is my milestone four project for the Code Institute's 'Level 5 Diploma in W
 
 ### Testing logins: 
 
-The following accounts can be used for the purposes of testing and assessing the front-end of the project, staff-level has no access to admin, but may use the rest of the system as normal, test can access admin: 
+The following accounts can be used for the purposes of testing and assessing the front-end of the project: 
 
-|||
-|------|------|
-test | test123 
+| username | password | privilege level |
+|------|------|---------|
+test_superuser | loginrequired | superuser
+test_admin_privs | test123 | admin
+test_librarian_privs | loginrequired | librarian
+test_staff_privs | loginrequired | staff
 
 Please be aare that you will not be able to sign-up to the application and will, necessarily, have to log-in using the above details. The system is not designed for open access from the public and is designed with the concept of being a system front-line staff would access, necessitating corporate-level control over sign-up and account creation. The current privilege heirarchy is Admin > Librarians > Staff: 
 
@@ -21,19 +24,15 @@ Full control of the system including creating, deleting and amending all records
 
 #### Librarian :
 
-Full access to read, write and destroy records within the system, limited access to create new staff members. 
+Full access to read, write and destroy records within the system, limited access to adminsitrative function such as creating new staff members. 
 
 #### Staff: 
 
-Access to stock information with limited create and write permissions. Frontline staff would not be expected to, for example, create CatalogueItems, as these would be created on purchase of items and involved other systems outside the purview of this project.  
+Read access to all system information with limited create and write permissions and no admin access. Frontline staff would not be expected to, for example, create CatalogueItems, as these would be created on purchase of items and involved other systems outside the purview of this project.  
 
 ---
 
-## :world_map: Strategy
-
----
-
-### Project Goals
+## Project Goals
 
 #### User Goals:
 
@@ -54,10 +53,6 @@ Access to stock information with limited create and write permissions. Frontline
 - Ensure that the project is scalable and easy to maintain, with clear, well-documented code.
 - Implement a reliable check-in/check-out system for managing item circulation.
 - Ensure compatibility across devices with a responsive design.
-
----
-
-## :earth_africa: Scope
 
 ---
 
@@ -86,6 +81,8 @@ The database for this project uses postgreSQL providing a robust and powerful so
 - Ability to browse the catalog and check item availability
 - Ability for staff to add, edit, and check in/out catalog items
 
+---
+
 ### User Stories
 
 #### First Time User
@@ -105,6 +102,8 @@ The database for this project uses postgreSQL providing a robust and powerful so
 - As a site owner, I want to manage and view inventory status with ease.
 - As a site owner, I want to allow library members to browse and check the availability of items.
 - As a site owner, I want to ensure data security for both catalog and user records.
+
+---
 
 Identified Tasks/Needs the Website Should Fulfill
 
@@ -135,11 +134,7 @@ In building the library app, several accessibility features to keep in mind:
 
 ---
 
-## :bricks: Structure
-
----
-
-### Database Structure
+## Database Structure
 
     LibraryCustomer:
         Has many CurrentLoan records.
@@ -195,7 +190,6 @@ email_address | CharField | max_length=256, required
 is_child | BooleanField | Required
 date_of_birth | DateField | Required
 
-
 #### CurrentLoan
 
 Field | Data Type | constraints/Notes |
@@ -205,7 +199,6 @@ customer | ForeignKey | References LibraryCustomer, on_delete=CASCADE
 stock_item | ForeignKey | References StockItem, on_delete=CASCADE
 loan_date | DateTimeField | Auto-set to current timestamp on creation
 due_date | DateTimeField | Required
-
 
 #### LoanHistory
 
@@ -217,7 +210,6 @@ stock_item | ForeignKey |References StockItem, on_delete=CASCADE
 check_out_date | DateTimeField | Required
 return_date | DateTimeField | Required
 status | CharField | Choices: completed, overdue, lost
-
 
 #### Fine
 
@@ -231,7 +223,6 @@ loan_history | OneToOneField | References LoanHistory, on_delete=CASCADE, unique
 is_paid | BooleanField | Default: False
 date_paid | DateTimeField | Optional
 
-
 #### Payment
 
 Field | Data Type | Constraints/Notes |
@@ -241,7 +232,6 @@ fine | ForeignKey | References Fine, on_delete=CASCADE
 stripe_payment_id | CharField | max_length=100, required
 status | CharField | Choices: PENDING, PROCESSING, COMPLETED, FAILED, REFUNDED
 created_at | DateTimeField | Auto-set to current timestamp on creation
-
 
 #### PaymentHistory
 
@@ -253,7 +243,6 @@ status_before | CharField | max_length=100, required
 status_after | CharField | max_length=100, required
 timestamp | DateTimeField | Auto-set to current timestamp on creation
 notes | TextField | Optional
-
 
 ### Catalogue Models
 
@@ -275,7 +264,6 @@ ItemLocation | CharField | max_length=256, required
 ReportDate | CharField | max_length=1024, required
 ItemCount | IntegerField | Default: 0
 
-
 #### StockItem
 
 Field | Data Type | Constraints/Notes | 
@@ -287,6 +275,7 @@ Borrower | CharField | max_length=256, optional
 last_updated | DateTimeField | Auto-updated on save
 catalogue_item | ForeignKey | References CatalogueItem, on_delete=CASCADE
 
+---
 
 ### Site Features
 
@@ -428,9 +417,8 @@ Payments
         Sensitive data (e.g., Stripe API keys) stored in environment variables.
 
 ---
----
 
-### Design
+## Design
 
 1. Typography
 
@@ -501,8 +489,8 @@ Font Choice: Roboto, A clean, legible font, was chosen early in the project to e
 - **HTML5**
 - **javaScript**
 - **jQuery**
+- **python**
 - **Markdown**
-- **Regex**
 
 #### Tools
 
@@ -510,22 +498,15 @@ Font Choice: Roboto, A clean, legible font, was chosen early in the project to e
 - **[Google Chrome](https://www.chrome.com/)**
 - **[Firefox](https://www.firefox.com)**
 - **[git](https://git-scm.com/)**
-- **[VSCode for linux](https://code.visualstudio.com/)**
 - **[Bootstrap 5.3.2](https://getbootstrap.com/)**
 - **[jQuery](https://jquery.com/)**
 - **[GitHub](https://www.github.com)**
-- **[Pencil](https://pencil.evolus.vn/)**
-- **[Coolors](https://coolors.co/)**
 - **[Google Fonts](https://fonts.google.com/)**
-- **[Photopea](https://www.photopea.com/)**
-- **[hextorgba](https://rgbacolorpicker.com/hex-to-rgba)**
 - **[amiresponsive](https://ui.dev/amiresponsive)**
 
 ---
 
 ## :microscope: Testing
-
----
 
 ### Testing Procedure
 ### Functional testing
