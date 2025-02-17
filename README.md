@@ -173,7 +173,7 @@ In building the library app, several accessibility features to keep in mind:
 
 ### Schema Diagram
 
-
+[![Schema Diagram](./docs/Untitled.png)](./docs/)
 
 ## Database Models
 
