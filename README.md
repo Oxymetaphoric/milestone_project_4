@@ -994,7 +994,7 @@ This test data structure ensures:
 
 #### Coverage Report
 
-![Coverage Report](./docs/Coverage report.html)
+[Coverage Report](./docs/Coverage report.html)
 
 #### WAVE
 
