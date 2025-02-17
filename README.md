@@ -19,11 +19,11 @@ Please be aare that you will not be able to sign-up to the application and will,
 
 Full control of the system including creating, deleting and amending all records within the system and in the admin panel. This would be utilised by administrative staff, or IT departments. 
 
-Librarian :
+#### Librarian :
 
 Full access to read, write and destroy records within the system, limited access to create new staff members. 
 
-Staff: 
+#### Staff: 
 
 Access to stock information with limited create and write permissions. Frontline staff would not be expected to, for example, create CatalogueItems, as these would be created on purchase of items and involved other systems outside the purview of this project.  
 
@@ -121,7 +121,7 @@ Secure user login and account management | 5
 Direct 404 links to home if catalog or user not found | 4
 
 
-###Accessibility
+### Accessibility
 
 In building the library app, several accessibility features to keep in mind:
 
@@ -173,7 +173,7 @@ In building the library app, several accessibility features to keep in mind:
 
 ### Schema Diagram
 
-[![Schema Diagram](./docs/Untitled.png)](./docs/)
+[![Schema Diagram](./docs/database_schema.png)](./docs/)
 
 ## Database Models
 
@@ -289,8 +289,6 @@ catalogue_item | ForeignKey | References CatalogueItem, on_delete=CASCADE
 
 
 ### Site Features
-
-CLIO is designed to manage a library’s catalogue, users, loans, fines, and payments. Here’s a detailed breakdown of its functionality:
 
 1. User Management
 
