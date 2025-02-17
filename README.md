@@ -37,7 +37,7 @@ If you wish to test the payment functionality, the best way would be to check ou
 test card | card number | expiry date | ccv | zip code
 |-------------|-------------|------|--------|------|
 | success | 4242424242424242 | 01/30 | 123 | 12345 |
-| error | 4000000000009995 | 01/30 | 123 ||| 12345 | 
+| error | 4000000000009995 | 01/30 | 123 | 12345 | 
 
 ---
 
